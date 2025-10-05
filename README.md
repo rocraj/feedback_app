@@ -95,16 +95,6 @@ frontend/
   ├── tsconfig.json        # TypeScript configuration
   └── package.json         # Project metadata & dependencies
 
-frontend/
-├── src/
-│ ├── api/ # API client & feedback service
-│ ├── components/ # React components (FeedbackForm, FeedbackList, AdminSummary)
-│ ├── pages/ # Pages (FeedbackPage, AdminPage)
-│ ├── App.tsx # Root component
-│ └── main.tsx # Entry point
-├── public/ # Static assets
-├── tsconfig.json # TypeScript configuration
-└── package.json # Project metadata & dependencies
 
 backend/
 ├── app/
