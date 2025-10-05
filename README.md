@@ -84,7 +84,7 @@ npm install
 ## Folder Structure
 
 ```bash
-feedback-project/
+feedback_app/
 │
 ├── backend/
 │   ├── app/
