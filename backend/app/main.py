@@ -1,35 +1,30 @@
-from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
 
-# Load environment variables early
+# Load environment variables
 load_dotenv()
-
-# Import versioned router (Captcha version for now)
-from app.api.v1.router import api_router
 
 # Initialize the FastAPI application
 app = FastAPI(
-    title="Feedback App Backend - Captcha Version",
+    title="Feedback App Backend - Health Check",
     version="0.1.0",
-    description="API backend for the feedback application (Version 3: Anonymous + Captcha)"
+    description="Minimal backend for health check"
 )
 
-# Optional CORS setup (for frontend integration)
+# Optional CORS setup
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Change this to your frontend URL in production
+    allow_origins=["*"],  # adjust in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Include versioned routes
-app.include_router(api_router)
-
+# Health check endpoint
 @app.get("/", tags=["Health"])
 async def root():
     """
     Simple health/status endpoint to confirm backend is running.
     """
-    return {"message": "Feedback App Backend running (Captcha Version)"}
+    return {"message": "Backend is running!"}
