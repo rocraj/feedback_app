@@ -84,33 +84,95 @@ npm install
 ## Folder Structure
 
 ```bash
-frontend/
-  ├── src/
-  │   ├── api/             # API client & feedback service
-  │   ├── components/      # React components (FeedbackForm, FeedbackList, AdminSummary)
-  │   ├── pages/           # Pages (FeedbackPage, AdminPage)
-  │   ├── App.tsx          # Root component
-  │   └── main.tsx         # Entry point
-  ├── public/              # Static assets
-  ├── tsconfig.json        # TypeScript configuration
-  └── package.json         # Project metadata & dependencies
-
-
-backend/
-├── app/
-│ ├── main.py
-│ ├── models.py
-│ ├── schemas.py
-│ └── routes/
-├── alembic/ # For database migrations
-└── requirements.txt
-
-bin/
-├── start-db.sh
-├── start-backend.sh
-├── build-frontend.sh
-├── start-frontend.sh
-└── start-all.sh
+feedback-project/
+│
+├── backend/
+│   ├── app/
+│   │   ├── api/
+│   │   │   ├── v1/
+│   │   │   │   ├── feedback_routes/
+│   │   │   │   │   ├── feedback_keycloak.py
+│   │   │   │   │   ├── feedback_jwt.py
+│   │   │   │   │   ├── feedback_captcha.py
+│   │   │   │   │   └── feedback_otp.py
+│   │   │   │   ├── auth_routes/
+│   │   │   │   │   ├── auth_keycloak.py
+│   │   │   │   │   ├── auth_jwt.py
+│   │   │   │   │   └── auth_otp.py
+│   │   │   │   ├── admin_routes/
+│   │   │   │   │   └── admin_summary.py
+│   │   │   │   └── router.py
+│   │   │   └── __init__.py
+│   │   ├── core/
+│   │   │   ├── config.py             # POPULATED
+│   │   │   ├── security.py
+│   │   │   └── auth_version.py
+│   │   ├── crud/
+│   │   │   ├── feedback.py
+│   │   │   ├── user.py
+│   │   │   └── otp.py
+│   │   ├── db/
+│   │   │   ├── base.py               # POPULATED (Base model class)
+│   │   │   ├── session.py            # POPULATED (Engine and session dependency)
+│   │   │   ├── init_db.py            # POPULATED (Table creation function)
+│   │   │   └── models/
+│   │   │       ├── feedback.py
+│   │   │       ├── user.py
+│   │   │       └── otp.py
+│   │   ├── schemas/
+│   │   │   ├── feedback.py
+│   │   │   ├── user.py
+│   │   │   └── otp.py
+│   │   ├── services/
+│   │   │   ├── keycloak_service.py
+│   │   │   ├── jwt_service.py
+│   │   │   ├── captcha_service.py
+│   │   │   └── otp_service.py
+│   │   ├── utils/
+│   │   │   ├── email_utils.py        # POPULATED
+│   │   │   └── common.py             # POPULATED
+│   │   ├── main.py
+│   │   └── __init__.py
+│   ├── Dockerfile                      # POPULATED
+│   ├── requirements.txt                # POPULATED
+│   └── README.md
+│
+├── frontend/
+│   ├── public/
+│   │   └── index.html
+│   ├── src/
+│   │   ├── api/
+│   │   │   └── feedbackApi.ts
+│   │   ├── components/
+│   │   │   ├── FeedbackForm.tsx
+│   │   │   ├── FeedbackList.tsx
+│   │   │   └── AdminSummary.tsx
+│   │   ├── pages/
+│   │   │   ├── Home.tsx
+│   │   │   └── Admin.tsx
+│   │   ├── hooks/
+│   │   │   └── useAuth.tsx
+│   │   ├── utils/
+│   │   │   └── validators.ts
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   ├── package.json
+│   ├── Dockerfile
+│   └── README.md
+│
+├── infra/
+│   └── db-init.sql                   # POPULATED
+│
+├── bin/
+│   ├── start-db.sh                   # POPULATED
+│   ├── start-backend.sh              # POPULATED
+│   ├── build-frontend.sh
+│   ├── start-frontend.sh
+│   └── start-all.sh                  # POPULATED
+│
+├── .env                              # POPULATED
+├── podman-compose.yaml               # POPULATED
+└── README.md
 
 ````
 
