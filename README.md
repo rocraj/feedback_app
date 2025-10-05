@@ -117,8 +117,6 @@ bin/
 
 ## Database Design
 
-## Database Design
-
 ### Users Table
 
 | Column          | Type        | Description                        |
