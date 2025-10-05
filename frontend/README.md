@@ -210,7 +210,7 @@ bin/
 
 ---
 
-## Future Enhancements
+## Future Enhancements 
 
 - Semantic analysis with AI to summarize feedback  
 - Export dashboard to CSV/Excel  
