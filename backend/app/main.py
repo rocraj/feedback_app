@@ -11,7 +11,7 @@ app = FastAPI(
     version="1.0.0",
     description=(
         "Backend API for the **Feedback Management System** — "
-        "supports user feedback submission, CAPTCHA verification, "
+        "supports user feedback submission, CAPTCHA verification. "
         "and OTP-based authentication for anonymous users.\n\n"
         "**Swagger UI:** `/docs`\n"
         "**ReDoc:** `/redoc`\n"
