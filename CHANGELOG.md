@@ -1,3 +1,30 @@
+```markdown
+🏁 Sprint 2 — Version 1.1.0 (Magic Link Authentication)
+
+Release Date: 2025-10-07
+Status: ✅ Completed
+
+🔐 Authentication & Security
+
+Implemented secure Magic Link authentication system
+- Added secure token generation with 24-hour expiration
+- Created email delivery system for magic link distribution
+- Implemented one-time use validation for security
+
+🧩 API Extensions
+- Added `/api/v1/magic-link/request-magic-link` endpoint
+- Added `/api/v1/magic-link/validate-magic-link` endpoint
+- Added `/api/v1/magic-link/feedback` endpoint for authenticated submissions
+
+📱 UI/UX Improvements
+- Enhanced feedback list with sorting and filtering capabilities
+- Added responsive design improvements for mobile devices
+- Implemented optimistic UI updates for smoother experience
+
+📋 Database
+- Added Magic Links table for secure token storage
+- Implemented proper token expiration and cleanup
+
 🏁 Sprint 1 — Version 1.0.0 (Initial Boilerplate Release)
 
 Release Date: 2025-10-06
@@ -41,6 +68,6 @@ Organized folders for scalability (backend/, frontend/, bin/)
 
 Implement Feedback submission API and database models
 
-Integrate OTP and CAPTCHA verification flow
+Implement Magic Link authentication and CAPTCHA verification flow
 
 Add Admin Dashboard and analytics summary endpoints

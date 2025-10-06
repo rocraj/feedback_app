@@ -1,6 +1,18 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
+import logging
+
+from app.api.v1.router import api_router
+from app.core.config import settings
+from app.db.init_db import init_db
+
+# --- Setup logging ---
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 # --- Load environment variables early ---
 load_dotenv()
@@ -11,8 +23,8 @@ app = FastAPI(
     version="1.0.0",
     description=(
         "Backend API for the **Feedback Management System** — "
-        "supports user feedback submission, CAPTCHA verification. "
-        "and OTP-based authentication for anonymous users.\n\n"
+        "supports user feedback submission, CAPTCHA verification, "
+        "and Magic Link authentication for secure feedback submission.\n\n"
         "**Swagger UI:** `/docs`\n"
         "**ReDoc:** `/redoc`\n"
         "**OpenAPI Spec:** `/openapi.json`"
@@ -31,11 +43,14 @@ app = FastAPI(
 # --- Enable CORS (recommended to restrict in production) ---
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # TODO: Replace with frontend domain in production
+    allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# --- Include API router ---
+app.include_router(api_router, prefix=settings.API_V1_STR)
 
 # --- Health check endpoint ---
 @app.get("/", tags=["Health"])
@@ -48,3 +63,10 @@ async def root():
         "message": "Feedback App Backend running successfully",
         "version": "1.0.0"
     }
+
+@app.on_event("startup")
+async def startup_event():
+    """Initialize database tables on startup"""
+    logger.info("Initializing database")
+    init_db()
+    logger.info("Database initialized successfully")

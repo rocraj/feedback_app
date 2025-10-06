@@ -1,6 +1,9 @@
 # Feedback App
 
-A full-stack feedback management system built with **React (Vite)** on the frontend and **FastAPI** on the backend, storing data in **PostgreSQL**. The app allows users to submit feedback, view submitted feedback, and provides an admin dashboard for summarizing responses. The application is fully containerized for easy development and deployment.
+A modern, full-stack feedback management system built with **React (Vite + TypeScript)** on the frontend and **FastAPI (Python)** on the backend, storing data in **PostgreSQL**. The application provides a clean, professional interface for submitting and viewing feedback, with multiple authentication options including Magic Links for secure, frictionless user experience.
+
+![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
 
 ---
 
@@ -22,29 +25,84 @@ A full-stack feedback management system built with **React (Vite)** on the front
 
 ## Features
 
-- User-friendly **feedback submission form**  
-- Display all submitted feedback below the form  
-- Support for **authenticated and anonymous submissions**  
-- Submission restrictions (edit only once per feedback/email)  
-- CAPTCHA or OTP for anonymous users  
-- Admin dashboard with **summary by rating ranges**  
-- Containerized environment for development and deployment  
-- Swagger UI for API exploration and testing  
+### Core Functionality
+- **User-friendly feedback submission form** with validation
+- **Interactive feedback listing** with sorting and filtering
+- **Multiple authentication options** (Magic Links, JWT, Anonymous)
+- **Admin dashboard** with statistics and feedback management
+- **Responsive design** for mobile and desktop users
+
+### Authentication & Security
+- **Magic Link authentication** for frictionless user experience
+- **JWT token-based authentication** for traditional login
+- **Anonymous submissions** with email verification
+- **CORS protection** and secure API endpoints
+- **Input validation** and sanitization throughout
+
+### User Experience
+- **Clean, modern interface** with professional styling
+- **Sorting and filtering** capabilities for feedback list
+- **Responsive design** adapts to all screen sizes
+- **Optimistic UI updates** for better perceived performance
+- **Form validation** with clear error messaging
+
+### Admin Features
+- **Feedback analytics** with visualization
+- **User management** dashboard
+- **Export capabilities** for data analysis
 
 ---
 
 ## Tech Stack
 
-- **Frontend:** React, TypeScript, Vite  
-- **Backend:** FastAPI, Python 3.11+, Uvicorn  
-- **Database:** PostgreSQL  
-- **Authentication:**  
-  - Version 1: Keycloak / OAuth2  
-  - Version 2: JWT Bearer tokens  
-  - Version 3: Anonymous + CAPTCHA  
-  - Version 4: Anonymous + OTP  
-- **Containerization:** Podman / Docker  
-- **Styling:** Custom SCSS (dark professional credential theme)  
+### Frontend
+- **React 18** with TypeScript
+- **Vite** for fast development and optimized builds
+- **React Router** for client-side routing
+- **Axios** for API requests
+- **SCSS** for component styling
+
+### Backend
+- **FastAPI** for high-performance API endpoints
+- **SQLAlchemy** for ORM database interactions
+- **Pydantic** for data validation
+- **Alembic** for database migrations
+- **JWT** and custom auth implementations
+
+### Database & Storage
+- **PostgreSQL** for relational data storage
+- **SQLAlchemy** for database interactions
+
+### Development & Deployment
+- **Docker/Podman** for containerization
+- **Shell scripts** for automation
+- **GitHub** for version control
+- **FastAPI SwaggerUI** for API documentation
+
+---
+
+## Recent Updates
+
+### Magic Link Authentication
+- Implemented secure, time-limited magic links sent via email for frictionless authentication
+- Enhanced security with one-time use tokens and expiration management
+- Streamlined user experience with fewer steps to authenticate
+
+### UI/UX Improvements
+- Redesigned feedback list with sorting and filtering capabilities
+- Enhanced form validation with real-time feedback
+- Improved responsive design for better mobile experience
+- Optimistic UI updates for snappier interactions
+
+### Security Enhancements
+- Strengthened token validation for Magic Links
+- Improved CORS configuration and security headers
+- Enhanced input validation and sanitization
+
+### Performance Optimizations
+- Reduced API payload sizes for faster loading
+- Improved database query performance
+- Better state management on frontend
 
 ---
 
@@ -62,8 +120,8 @@ A full-stack feedback management system built with **React (Vite)** on the front
 ```bash
 git clone https://github.com/rocraj/feedback_app.git
 cd feedback_app
+```
 
-````
 ### Setup Backend
 
 ```bash
@@ -71,15 +129,14 @@ cd backend
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+```
 
-````
 ### Setup Frontend
 
 ```bash
 cd frontend
 npm install
-
-````
+```
 
 ## Folder Structure
 
@@ -87,95 +144,93 @@ npm install
 feedback_app/
 │
 ├── backend/
-│   ├── app/
-│   │   ├── api/
-│   │   │   ├── v1/
-│   │   │   │   ├── feedback_routes/
-│   │   │   │   │   ├── feedback_keycloak.py
-│   │   │   │   │   ├── feedback_jwt.py
-│   │   │   │   │   ├── feedback_captcha.py
-│   │   │   │   │   └── feedback_otp.py
-│   │   │   │   ├── auth_routes/
-│   │   │   │   │   ├── auth_keycloak.py
-│   │   │   │   │   ├── auth_jwt.py
-│   │   │   │   │   └── auth_otp.py
-│   │   │   │   ├── admin_routes/
-│   │   │   │   │   └── admin_summary.py
-│   │   │   │   └── router.py
-│   │   │   └── __init__.py
-│   │   ├── core/
-│   │   │   ├── config.py             # POPULATED
-│   │   │   ├── security.py
-│   │   │   └── auth_version.py
-│   │   ├── crud/
-│   │   │   ├── feedback.py
-│   │   │   ├── user.py
-│   │   │   └── otp.py
-│   │   ├── db/
-│   │   │   ├── base.py               # POPULATED (Base model class)
-│   │   │   ├── session.py            # POPULATED (Engine and session dependency)
-│   │   │   ├── init_db.py            # POPULATED (Table creation function)
-│   │   │   └── models/
-│   │   │       ├── feedback.py
-│   │   │       ├── user.py
-│   │   │       └── otp.py
-│   │   ├── schemas/
-│   │   │   ├── feedback.py
-│   │   │   ├── user.py
-│   │   │   └── otp.py
-│   │   ├── services/
-│   │   │   ├── keycloak_service.py
-│   │   │   ├── jwt_service.py
-│   │   │   ├── captcha_service.py
-│   │   │   └── otp_service.py
-│   │   ├── utils/
-│   │   │   ├── email_utils.py        # POPULATED
-│   │   │   └── common.py             # POPULATED
-│   │   ├── main.py
-│   │   └── __init__.py
-│   ├── Dockerfile                      # POPULATED
-│   ├── requirements.txt                # POPULATED
-│   └── README.md
+│   ├── app/
+│   │   ├── api/
+│   │   │   ├── v1/
+│   │   │   │   ├── feedback_routes/
+│   │   │   │   │   ├── feedback_keycloak.py
+│   │   │   │   │   ├── feedback_jwt.py
+│   │   │   │   │   ├── feedback_captcha.py
+│   │   │   │   │   └── feedback_magic_link.py
+│   │   │   │   ├── auth_routes/
+│   │   │   │   │   ├── auth_keycloak.py
+│   │   │   │   │   ├── auth_jwt.py
+│   │   │   │   │   └── auth_magic_link.py
+│   │   │   │   ├── admin_routes/
+│   │   │   │   │   └── admin_summary.py
+│   │   │   │   └── router.py
+│   │   │   └── __init__.py
+│   │   ├── core/
+│   │   │   ├── config.py             # POPULATED
+│   │   │   ├── security.py
+│   │   │   └── auth_version.py
+│   │   ├── crud/
+│   │   │   ├── feedback.py
+│   │   │   ├── user.py
+│   │   │   └── magic_link.py
+│   │   ├── db/
+│   │   │   ├── base.py               # POPULATED (Base model class)
+│   │   │   ├── session.py            # POPULATED (Engine and session dependency)
+│   │   │   ├── init_db.py            # POPULATED (Table creation function)
+│   │   │   └── models/
+│   │   │       ├── feedback.py
+│   │   │       ├── user.py
+│   │   │       └── magic_link.py
+│   │   ├── schemas/
+│   │   │   ├── feedback.py
+│   │   │   ├── user.py
+│   │   │   └── magic_link.py
+│   │   ├── services/
+│   │   │   ├── keycloak_service.py
+│   │   │   ├── jwt_service.py
+│   │   │   ├── captcha_service.py
+│   │   │   └── magic_link_service.py
+│   │   ├── utils/
+│   │   │   ├── email_utils.py        # POPULATED
+│   │   │   └── common.py             # POPULATED
+│   │   ├── main.py
+│   │   └── __init__.py
+│   ├── Dockerfile                      # POPULATED
+│   ├── requirements.txt                # POPULATED
+│   └── README.md
 │
 ├── frontend/
-│   ├── public/
-│   │   └── index.html
-│   ├── src/
-│   │   ├── api/
-│   │   │   └── feedbackApi.ts
-│   │   ├── components/
-│   │   │   ├── FeedbackForm.tsx
-│   │   │   ├── FeedbackList.tsx
-│   │   │   └── AdminSummary.tsx
-│   │   ├── pages/
-│   │   │   ├── Home.tsx
-│   │   │   └── Admin.tsx
-│   │   ├── hooks/
-│   │   │   └── useAuth.tsx
-│   │   ├── utils/
-│   │   │   └── validators.ts
-│   │   ├── App.tsx
-│   │   └── main.tsx
-│   ├── package.json
-│   ├── Dockerfile
-│   └── README.md
+│   ├── public/
+│   │   └── index.html
+│   ├── src/
+│   │   ├── api/
+│   │   │   └── feedbackApi.ts
+│   │   ├── components/
+│   │   │   ├── FeedbackForm.tsx
+│   │   │   ├── FeedbackList.tsx
+│   │   │   └── AdminSummary.tsx
+│   │   ├── pages/
+│   │   │   ├── Home.tsx
+│   │   │   └── Admin.tsx
+│   │   ├── hooks/
+│   │   │   └── useAuth.tsx
+│   │   ├── utils/
+│   │   │   └── validators.ts
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   ├── package.json
+│   ├── Dockerfile
+│   └── README.md
 │
 ├── infra/
-│   └── db-init.sql                   # POPULATED
+│   └── db-init.sql                   # POPULATED
 │
 ├── bin/
-│   ├── start-db.sh                   # POPULATED
-│   ├── start-backend.sh              # POPULATED
-│   ├── build-frontend.sh
-│   ├── start-frontend.sh
-│   └── start-all.sh                  # POPULATED
+│   ├── start-db.sh                   # POPULATED
+│   ├── start-backend.sh              # POPULATED
+│   ├── build-frontend.sh
+│   ├── start-frontend.sh
+│   └── start-all.sh                  # POPULATED
 │
 ├── .env                              # POPULATED
 ├── podman-compose.yaml               # POPULATED
 └── README.md
-
-````
-
+```
 
 ## Database Design
 
@@ -212,15 +267,16 @@ feedback_app/
 
 ---
 
-### OTP Verification Table
+### Magic Links Table
 
 | Column      | Type       | Description                                         |
 |--------------|-----------|-----------------------------------------------------|
-| email        | VARCHAR PK | Email used for OTP verification                    |
-| otp_code     | VARCHAR    | 6-digit OTP code                                   |
-| created_at   | TIMESTAMP  | Timestamp when OTP was generated                   |
-| expires_at   | TIMESTAMP  | Expiry timestamp (e.g., 5 minutes after creation)  |
-| verified     | BOOLEAN    | Marks whether OTP has been successfully used       |
+| id           | UUID (PK)  | Unique magic link identifier                       |
+| email        | VARCHAR    | Recipient's email address                          |
+| secret_token | VARCHAR    | Secure token for validation                        |
+| created_at   | TIMESTAMP  | Creation time                                      |
+| expires_at   | TIMESTAMP  | Link expiration time (24 hours after creation)     |
+| used         | BOOLEAN    | Whether the link has been used                     |
 
 ---
 
@@ -237,7 +293,7 @@ feedback_app/
 ---
 
 **Note:**  
-- CAPTCHA and OTP tokens are **stored in temporary tables**, used only for verification before feedback insertion.  
+- CAPTCHA tokens and Magic Link tokens are **stored in temporary tables**, used only for verification before feedback insertion.  
 - Once verification is complete, the verified status is updated or the entry is deleted for security.  
 - This approach ensures the **Feedback table remains clean** and only contains verified submissions.
 
@@ -248,7 +304,7 @@ feedback_app/
 | V1      | Keycloak / OAuth2    | Submit feedback, edit once              |
 | V2      | JWT Bearer tokens    | Signup/login, submit feedback, edit once|
 | V3      | Anonymous + CAPTCHA  | 1 submission per email                   |
-| V4      | Anonymous + OTP      | 1 submission and 1 edit per email       |
+| V4      | Magic Link via Email | 1 submission per magic link, secure token in URL |
 
 
 ## Admin Console
@@ -304,4 +360,3 @@ This project is a personal exercise developed by Sri Mahesh Durga Raju.
 This project is licensed under the **MIT License**, which allows you to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the software, provided that the original copyright notice and this permission notice are included in all copies or substantial portions of the software.
 
 For more details, see the [MIT License](https://opensource.org/licenses/MIT).
-

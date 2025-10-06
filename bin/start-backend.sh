@@ -22,6 +22,9 @@ else
     pip install -r requirements.txt
 fi
 
+# Ensure virtual environment is activated
+source venv/bin/activate
+
 # Run Uvicorn with auto-reload
 echo "Starting FastAPI backend..."
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000

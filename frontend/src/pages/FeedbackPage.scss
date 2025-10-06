@@ -1,0 +1,104 @@
+.feedback-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  
+  .feedback-header {
+    margin-bottom: 2rem;
+    text-align: center;
+    
+    h1 {
+      font-size: 2.25rem;
+      color: #2c3e50;
+      margin-bottom: 1rem;
+    }
+    
+    .auth-options {
+      font-size: 1rem;
+      color: #34495e;
+      font-weight: 500;
+      
+      .magic-link-option {
+        color: #2980b9;
+        font-weight: 600;
+        text-decoration: none;
+        
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+  
+  .tab-navigation {
+    display: flex;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #e0e0e0;
+    
+    .tab-button {
+      padding: 0.85rem 1.75rem;
+      font-size: 1.05rem;
+      background: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: #34495e;
+      
+      &:hover {
+        color: #3498db;
+      }
+      
+      &.active {
+        color: #2980b9;
+        border-bottom-color: #2980b9;
+        font-weight: 600;
+      }
+      
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+  
+  .tab-content {
+    flex-grow: 1;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+  }
+  
+  .feedback-footer {
+    margin-top: 3rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #34495e;
+    padding: 1rem 0;
+    font-weight: 500;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 1rem;
+    
+    .feedback-header {
+      h1 {
+        font-size: 1.75rem;
+      }
+    }
+    
+    .tab-navigation {
+      .tab-button {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+    }
+    
+    .tab-content {
+      padding: 1rem;
+    }
+  }
+}
