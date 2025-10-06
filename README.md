@@ -206,13 +206,40 @@ feedback_app/
 | mobile           | VARCHAR    | Optional                             |
 | rating           | INT        | Rating 1–5                           |
 | feedback         | TEXT       | Feedback content                     |
-| captcha_token    | VARCHAR    | Stores CAPTCHA token (V3)           |
-| otp_code         | VARCHAR    | Stores OTP for anonymous submissions |
 | submission_count | INT        | Number of edits allowed (max 1)     |
 | created_at       | TIMESTAMP  | Submission timestamp                 |
 | updated_at       | TIMESTAMP  | Last edit timestamp                  |
 
 ---
+
+### OTP Verification Table
+
+| Column      | Type       | Description                                         |
+|--------------|-----------|-----------------------------------------------------|
+| email        | VARCHAR PK | Email used for OTP verification                    |
+| otp_code     | VARCHAR    | 6-digit OTP code                                   |
+| created_at   | TIMESTAMP  | Timestamp when OTP was generated                   |
+| expires_at   | TIMESTAMP  | Expiry timestamp (e.g., 5 minutes after creation)  |
+| verified     | BOOLEAN    | Marks whether OTP has been successfully used       |
+
+---
+
+### CAPTCHA Verification Table
+
+| Column        | Type        | Description                                         |
+|----------------|------------|-----------------------------------------------------|
+| token          | VARCHAR PK | CAPTCHA token received from frontend (e.g., reCAPTCHA) |
+| created_at     | TIMESTAMP  | Timestamp when CAPTCHA token was received          |
+| verified       | BOOLEAN    | Indicates whether CAPTCHA was successfully verified |
+| ip_address     | VARCHAR    | (Optional) Client IP for extra validation/logging   |
+| expires_at     | TIMESTAMP  | Expiry timestamp for CAPTCHA token validity (e.g., 2 minutes) |
+
+---
+
+**Note:**  
+- CAPTCHA and OTP tokens are **stored in temporary tables**, used only for verification before feedback insertion.  
+- Once verification is complete, the verified status is updated or the entry is deleted for security.  
+- This approach ensures the **Feedback table remains clean** and only contains verified submissions.
 
 ## Authentication Versions
 
