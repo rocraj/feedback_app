@@ -60,6 +60,7 @@ app.yaml
 
 # Firebase
 .firebase/
+.firebase/*.cache
 firebase-debug.log
 
 # Deployment
