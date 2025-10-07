@@ -1,10 +1,11 @@
 import os
 from pydantic_settings import BaseSettings
 from typing import Optional, List
+import json
 
-# --- Mocking Environment Variables for Colab/Standalone Execution ---
-# In a real application, these would be loaded from your .env file.
-# postgres://avnadmin:AVNS_wIEjTHNWLYGpcL1Rfrr@feedback-mini-app-feedback-app.b.aivencloud.com:28220/defaultdb?sslmode=require
+# These values are kept for reference but not used since we always connect to Aiven cloud
+# In development environment, set defaults (unused now)
+
 os.environ["POSTGRES_USER"] = "postgres"
 os.environ["POSTGRES_PASSWORD"] = "password"
 os.environ["POSTGRES_DB"] = "feedback_db"
@@ -12,6 +13,7 @@ os.environ["POSTGRES_HOST"] = "localhost" # Changed from 'feedback-db' for local
 os.environ["POSTGRES_PORT"] = "5432" # 5432 is the default, no need to set if default is used
 os.environ["FRONTEND_URL"] = "http://localhost:5173"
 os.environ["EMAIL_BACKEND"] = "SMTP"  # Options: SMTP, CONSOLE
+
 
 class Settings(BaseSettings):
     """
@@ -25,14 +27,26 @@ class Settings(BaseSettings):
     # Security
     SECRET_KEY: str = os.getenv("SECRET_KEY", "supersecretkey123")
     
-    # CORS
-    CORS_ORIGINS: List[str] = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173,http://127.0.0.1:3000,https://feedback-mini.web.app").split(",")
+    # CORS - Handle as a property instead of a field to avoid JSON parsing issues
+    @property
+    def CORS_ORIGINS(self) -> List[str]:
+        cors_env = os.getenv("CORS_ORIGINS", "")
+        if cors_env:
+            try:
+                # Try to parse as JSON first
+                return json.loads(cors_env)
+            except json.JSONDecodeError:
+                # Fallback to comma-separated string
+                return cors_env.split(",")
+        return ["http://localhost:5173", "http://localhost:3000", 
+                "http://127.0.0.1:5173", "http://127.0.0.1:3000", 
+                "https://feedback-mini.web.app"]
     
     # Frontend URL (for magic links)
-    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:5173")
+    FRONTEND_URL: str = "https://feedback-mini.web.app"
     
     # Email settings
-    EMAIL_BACKEND: str = "SMTP"  # Options: SMTP, CONSOLE
+    EMAIL_BACKEND: str = "SMTP"  # Options: SMTP, CONSOLE (hardcoded)
     SMTP_HOST: Optional[str] = "smtp.gmail.com"
     SMTP_PORT: Optional[int] = 587
     SMTP_USER: Optional[str] = "srimaheshraju@gmail.com"
@@ -53,9 +67,16 @@ class Settings(BaseSettings):
     # Note: This is a property, meaning it's calculated every time it's accessed.
     @property
     def DATABASE_URL(self) -> str:
-        # Use psycopg2 instead of psycopg as that's what's installed
-        return f"postgresql+psycopg2://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
-        #return f"postgres://avnadmin:AVNS_wIEjTHNWLYGpcL1Rfrr@feedback-mini-app-feedback-app.b.aivencloud.com:28220/defaultdb?sslmode=require"
+        # Use environment variable if set, otherwise use the hardcoded connection string
+        db_url = os.getenv("DATABASE_URL")
+        if db_url:
+            # Convert postgres:// to postgresql+psycopg2:// for SQLAlchemy
+            if db_url.startswith("postgres://"):
+                db_url = db_url.replace("postgres://", "postgresql+psycopg2://", 1)
+            return db_url
+        
+        # Fallback to hardcoded Aiven Cloud database connection
+        return f"postgresql+psycopg2://avnadmin:AVNS_wIEjTHNWLYGpcL1Rfrr@feedback-mini-app-feedback-app.b.aivencloud.com:28220/defaultdb?sslmode=require"
     
 # Initialize settings to be imported by other modules
 settings = Settings()
@@ -63,5 +84,5 @@ settings = Settings()
 # --- Example Usage ---
 print("--- Settings Loaded Successfully ---")
 print(f"Project Name: {settings.PROJECT_NAME}")
-print(f"Database User (POSTGRES_USER): {settings.POSTGRES_USER}")
-print(f"Database URL (Calculated Property): {settings.DATABASE_URL}")
+print(f"CORS Origins: {settings.CORS_ORIGINS}")
+print(f"Database URL: {settings.DATABASE_URL}")
