@@ -2,9 +2,12 @@
 
 ## 🌐 Live Demo: [https://feedback-mini.web.app](https://feedback-mini.web.app)
 
-> **Note:** The live demo requires the backend to be running locally. Please follow the [Installation](#installation) instructions to set up the backend server before testing the demo. Backend deployment to a cloud service is planned for future releases.
+> **Success:** The application is fully deployed! 
+> - **Frontend**: Hosted on Firebase at [https://feedback-mini.web.app](https://feedback-mini.web.app)
+> - **Backend**: Hosted on Google Cloud App Engine at [https://feedback-backend-app.uc.r.appspot.com](https://feedback-backend-app.uc.r.appspot.com)
+> - **API Documentation**: Interactive Swagger UI available at [https://feedback-backend-app.uc.r.appspot.com/docs](https://feedback-backend-app.uc.r.appspot.com/docs)
 
-A modern, full-stack feedback management system built with **React (Vite + TypeScript)** on the frontend and **FastAPI (Python)** on the backend, storing data in **PostgreSQL**. The application provides a clean, professional interface for submitting and viewing feedback, with multiple authentication options including Magic Links for secure, frictionless user experience.
+A modern, full-stack feedback management system built with **React (Vite + TypeScript)** on the frontend and **FastAPI (Python)** on the backend, storing data in **PostgreSQL**. The application provides a clean, professional interface for submitting and viewing feedback, with multiple submission methods including a simple one-feedback-per-email system and Magic Links for secure, frictionless user experience.
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
@@ -39,7 +42,7 @@ A modern, full-stack feedback management system built with **React (Vite + TypeS
 ### Authentication & Security
 - **Magic Link authentication** for frictionless user experience
 - **JWT token-based authentication** for traditional login
-- **Anonymous submissions** with email verification
+- **Simple submission system** with one feedback per email
 - **CORS protection** and secure API endpoints
 - **Input validation** and sanitization throughout
 
@@ -56,6 +59,21 @@ A modern, full-stack feedback management system built with **React (Vite + TypeS
 - **Export capabilities** for data analysis
 
 ---
+
+## API Documentation
+
+The API provides endpoints for feedback submission, magic link authentication, and administrative functions. Interactive Swagger documentation is available at:
+
+🔗 **[https://feedback-backend-app.uc.r.appspot.com/docs](https://feedback-backend-app.uc.r.appspot.com/docs)**
+
+### Key Endpoints
+
+| Endpoint                        | Description                                |
+|---------------------------------|--------------------------------------------|
+| `/api/v1/feedback`              | Submit and retrieve feedback               |
+| `/api/v1/magic-link/request`    | Request a magic link for authentication    |
+| `/api/v1/magic-link/validate`   | Validate a magic link token                |
+| `/api/v1/magic-link/feedback`   | Submit feedback via magic link             |
 
 ## Tech Stack
 
@@ -78,8 +96,10 @@ A modern, full-stack feedback management system built with **React (Vite + TypeS
 - **SQLAlchemy** for database interactions
 
 ### Development & Deployment
-- **Docker/Podman** for containerization
-- **Shell scripts** for automation
+- **Docker/Podman** for local containerization
+- **Google Cloud App Engine** for backend hosting
+- **Firebase Hosting** for frontend deployment
+- **Shell scripts** for automation and deployment
 - **GitHub** for version control
 - **FastAPI SwaggerUI** for API documentation
 
@@ -112,6 +132,8 @@ A modern, full-stack feedback management system built with **React (Vite + TypeS
 
 ## Installation
 
+> **Note:** The application is fully deployed and accessible online. The installation steps below are only necessary if you want to run the application locally for development purposes.
+
 ### Prerequisites
 
 - Node.js >= 18  
@@ -126,20 +148,36 @@ git clone https://github.com/rocraj/feedback_app.git
 cd feedback_app
 ```
 
-### Setup Backend
+### Run the Application
 
+**Option 1: Use the deployed version**
+Simply access the frontend at [https://feedback-mini.web.app](https://feedback-mini.web.app).
+The backend is already deployed and configured at [https://feedback-backend-app.uc.r.appspot.com](https://feedback-backend-app.uc.r.appspot.com).
+
+**Option 2: Run locally for development**
+
+Start everything with a single command:
+```bash
+./bin/start-all.sh
+```
+
+Or manually set up each component:
+
+**Backend:**
 ```bash
 cd backend
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+cd ..
+./bin/start-backend.sh
 ```
 
-### Setup Frontend
-
+**Frontend:**
 ```bash
 cd frontend
 npm install
+npm run dev
 ```
 
 ## Folder Structure
@@ -154,7 +192,6 @@ feedback_app/
 │   │   │   │   ├── feedback_routes/
 │   │   │   │   │   ├── feedback_keycloak.py
 │   │   │   │   │   ├── feedback_jwt.py
-│   │   │   │   │   ├── feedback_captcha.py
 │   │   │   │   │   └── feedback_magic_link.py
 │   │   │   │   ├── auth_routes/
 │   │   │   │   │   ├── auth_keycloak.py
@@ -187,7 +224,6 @@ feedback_app/
 │   │   ├── services/
 │   │   │   ├── keycloak_service.py
 │   │   │   ├── jwt_service.py
-│   │   │   ├── captcha_service.py
 │   │   │   └── magic_link_service.py
 │   │   ├── utils/
 │   │   │   ├── email_utils.py        # POPULATED
@@ -284,21 +320,10 @@ feedback_app/
 
 ---
 
-### CAPTCHA Verification Table
-
-| Column        | Type        | Description                                         |
-|----------------|------------|-----------------------------------------------------|
-| token          | VARCHAR PK | CAPTCHA token received from frontend (e.g., reCAPTCHA) |
-| created_at     | TIMESTAMP  | Timestamp when CAPTCHA token was received          |
-| verified       | BOOLEAN    | Indicates whether CAPTCHA was successfully verified |
-| ip_address     | VARCHAR    | (Optional) Client IP for extra validation/logging   |
-| expires_at     | TIMESTAMP  | Expiry timestamp for CAPTCHA token validity (e.g., 2 minutes) |
-
----
-
 **Note:**  
-- CAPTCHA tokens and Magic Link tokens are **stored in temporary tables**, used only for verification before feedback insertion.  
-- Once verification is complete, the verified status is updated or the entry is deleted for security.  
+- Magic Link tokens are **stored in a dedicated table**, used only for verification before feedback insertion.  
+- Email addresses are used as unique identifiers for the simple submission system, allowing one submission per email with one edit.
+- Once verification is complete for magic links, the verified status is updated or the entry is deleted for security.  
 - This approach ensures the **Feedback table remains clean** and only contains verified submissions.
 
 ## Authentication Versions
@@ -307,7 +332,7 @@ feedback_app/
 |---------|---------------------|-----------------------------------------|
 | V1      | Keycloak / OAuth2    | Submit feedback, edit once              |
 | V2      | JWT Bearer tokens    | Signup/login, submit feedback, edit once|
-| V3      | Anonymous + CAPTCHA  | 1 submission per email                   |
+| V3      | Simple Submission    | 1 submission per email, 1 edit allowed  |
 | V4      | Magic Link via Email | 1 submission per magic link, secure token in URL |
 
 
@@ -326,24 +351,46 @@ feedback_app/
 
 ## Scripts
 
+### Development Scripts
 | Script                  | Description                                   |
 |-------------------------|-----------------------------------------------|
-| `start-db.sh`           | Start PostgreSQL database                      |
-| `start-backend.sh`      | Start FastAPI backend                          |
+| `start-db.sh`           | Start PostgreSQL database locally              |
+| `start-backend.sh`      | Start FastAPI backend locally                  |
 | `build-frontend.sh`     | Build React frontend                           |
 | `start-frontend.sh`     | Serve frontend locally                         |
-| `start-all.sh`          | Sequentially start DB → backend → frontend    |
+| `start-all.sh`          | Sequentially start all services locally (DB → backend → frontend) with proper process management and colored output. Also displays information about the production deployment. |
+
+### Deployment Scripts
+| Script                  | Description                                   |
+|-------------------------|-----------------------------------------------|
+| `deploy-backend.sh`     | Deploy backend to Google Cloud App Engine. Handles app.yaml configuration and displays logs after deployment.  |
+| `deploy-frontend.sh`    | Build and deploy frontend to Firebase Hosting. Includes dependency installation, environment checks, and Firebase login if needed. |
+| `deploy-all.sh`         | Complete deployment script that runs both backend and frontend deployments in sequence with proper error handling and colored output. |
 
 ---
 
-## Containerization
+## Deployment Architecture
 
-- All services are **containerized with Podman/Docker**  
+### Production Environment
+- **Frontend**: Deployed on Firebase Hosting
+  - Static files served from global CDN
+  - URL: [https://feedback-mini.web.app](https://feedback-mini.web.app)
+  
+- **Backend**: Hosted on Google Cloud App Engine
+  - Automatically scales based on traffic
+  - URL: [https://feedback-backend-app.uc.r.appspot.com](https://feedback-backend-app.uc.r.appspot.com)
+  
+- **Database**: Aiven PostgreSQL Cloud
+  - Managed PostgreSQL service with automatic backups
+  - Connected via secure connection string
+
+### Local Development
+- All services are **containerized with Podman/Docker**
 - `docker-compose.yml` or `podman-compose.yml` sets up:
-  - PostgreSQL  
-  - Backend (FastAPI)  
-  - Frontend (React Vite)  
-- Easy deployment for development or production environments
+  - PostgreSQL database container
+  - Backend (FastAPI) container
+  - Frontend (React Vite) container
+- Easy setup with single command: `./bin/start-all.sh`
 
 ---
 
