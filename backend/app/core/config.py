@@ -4,11 +4,12 @@ from typing import Optional, List
 
 # --- Mocking Environment Variables for Colab/Standalone Execution ---
 # In a real application, these would be loaded from your .env file.
+# postgres://avnadmin:AVNS_wIEjTHNWLYGpcL1Rfrr@feedback-mini-app-feedback-app.b.aivencloud.com:28220/defaultdb?sslmode=require
 os.environ["POSTGRES_USER"] = "postgres"
 os.environ["POSTGRES_PASSWORD"] = "password"
 os.environ["POSTGRES_DB"] = "feedback_db"
 os.environ["POSTGRES_HOST"] = "localhost" # Changed from 'feedback-db' for local testing
-# os.environ["POSTGRES_PORT"] = "5432" # 5432 is the default, no need to set if default is used
+os.environ["POSTGRES_PORT"] = "5432" # 5432 is the default, no need to set if default is used
 os.environ["FRONTEND_URL"] = "http://localhost:5173"
 os.environ["EMAIL_BACKEND"] = "SMTP"  # Options: SMTP, CONSOLE
 
@@ -54,6 +55,7 @@ class Settings(BaseSettings):
     def DATABASE_URL(self) -> str:
         # Use psycopg2 instead of psycopg as that's what's installed
         return f"postgresql+psycopg2://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+        #return f"postgres://avnadmin:AVNS_wIEjTHNWLYGpcL1Rfrr@feedback-mini-app-feedback-app.b.aivencloud.com:28220/defaultdb?sslmode=require"
     
 # Initialize settings to be imported by other modules
 settings = Settings()

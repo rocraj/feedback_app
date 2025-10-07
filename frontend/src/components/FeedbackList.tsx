@@ -22,8 +22,6 @@ interface PaginatedResponse {
   pages: number;
 }
 
-const ITEMS_PER_PAGE = 5;
-
 const FeedbackList: React.FC = () => {
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -35,6 +33,10 @@ const FeedbackList: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(0);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(5);
+  
+  // Available page size options
+  const pageSizeOptions = [5, 10, 25, 50, 100];
 
   useEffect(() => {
     // Create a flag to prevent state updates if the component unmounts
@@ -49,7 +51,7 @@ const FeedbackList: React.FC = () => {
         
         const queryParams: FeedbackQueryParams = {
           page: currentPage,
-          size: ITEMS_PER_PAGE,
+          size: itemsPerPage,
           sortBy: sortField,
           sortDirection: sortDirection
         };
@@ -88,7 +90,7 @@ const FeedbackList: React.FC = () => {
     return () => {
       isMounted = false;
     };
-  }, [currentPage, sortField, sortDirection]);
+  }, [currentPage, sortField, sortDirection, itemsPerPage]);
 
   // Use the feedbacks directly from the API, as they're already sorted
   // This prevents unnecessary re-renders and loops
@@ -111,6 +113,14 @@ const FeedbackList: React.FC = () => {
   // Handle page navigation
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+  };
+  
+  // Handle change of items per page
+  const handleItemsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newSize = Number(e.target.value);
+    setItemsPerPage(newSize);
+    // Reset to first page when changing items per page
+    setCurrentPage(1);
   };
   
   // Generate pagination numbers
@@ -276,17 +286,42 @@ const FeedbackList: React.FC = () => {
           </table>
           
           {/* Pagination controls */}
-          {totalPages > 1 && (
-            <div className="pagination-controls">
-              <div className="pagination-info">
-                Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, totalItems)} of {totalItems} entries
+          <div className="pagination-controls">
+            <div className="pagination-row">
+              <div className="items-per-page">
+                <span>Show</span>
+                <select 
+                  value={itemsPerPage}
+                  onChange={handleItemsPerPageChange}
+                  className="items-per-page-select"
+                >
+                  {pageSizeOptions.map(size => (
+                    <option key={size} value={size}>
+                      {size}
+                    </option>
+                  ))}
+                </select>
+                <span>entries</span>
               </div>
               
+              <div className="pagination-info">
+                {totalItems > 0 ? (
+                  <span>
+                    Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems} entries
+                  </span>
+                ) : (
+                  <span>No entries to show</span>
+                )}
+              </div>
+            </div>
+            
+            {totalPages > 1 && (
               <div className="pagination-buttons">
                 <button 
                   onClick={() => handlePageChange(currentPage - 1)} 
                   disabled={currentPage === 1}
                   className="pagination-button prev"
+                  aria-label="Previous page"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="15 18 9 12 15 6"></polyline>
@@ -313,14 +348,15 @@ const FeedbackList: React.FC = () => {
                   onClick={() => handlePageChange(currentPage + 1)} 
                   disabled={currentPage === totalPages}
                   className="pagination-button next"
+                  aria-label="Next page"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="9 18 15 12 9 6"></polyline>
                   </svg>
                 </button>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       )}
     </div>

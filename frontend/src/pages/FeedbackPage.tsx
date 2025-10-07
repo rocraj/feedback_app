@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import FeedbackForm from "../components/FeedbackForm";
 import FeedbackList from "../components/FeedbackList";
 import "./FeedbackPage.scss";
@@ -7,7 +7,12 @@ import "./FeedbackPage.scss";
 const FeedbackPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<'form' | 'list'>('form');
+
+  // Extract email and token from URL query parameters (from magic link redirect)
+  const emailParam = searchParams.get('email');
+  const tokenParam = searchParams.get('token');
   
   // Parse the hash from URL when component mounts or URL changes
   useEffect(() => {
@@ -24,12 +29,22 @@ const FeedbackPage: React.FC = () => {
   const switchTab = (tab: 'form' | 'list') => {
     if (tab === activeTab) return;
     
-    const hash = tab === 'list' ? '#latest' : '';
-    navigate(hash, { replace: true }); // Use replace to avoid adding to history stack
+    // Preserve query parameters if they exist when changing tabs
+    let navigateTo = '';
+    const preserveParams = new URLSearchParams(searchParams);
+    
+    if (tab === 'list') {
+      navigateTo = '#latest';
+    }
+    
+    // If we have search params, add them to the navigation
+    const hasParams = preserveParams.toString().length > 0;
+    if (hasParams) {
+      navigateTo = `${navigateTo}${navigateTo.includes('?') ? '&' : '?'}${preserveParams.toString()}`;
+    }
+    
+    navigate(navigateTo, { replace: true }); // Use replace to avoid adding to history stack
   };
-  
-  // We don't need this second useEffect as it's causing a loop
-  // The navigation is now handled within the switchTab function
   
   return (
     <div className="feedback-page">
@@ -59,7 +74,10 @@ const FeedbackPage: React.FC = () => {
       
       <div className="tab-content">
         {activeTab === 'form' ? (
-          <FeedbackForm />
+          <FeedbackForm 
+            initialEmail={emailParam || ''} 
+            magicLinkToken={tokenParam || ''}
+          />
         ) : (
           <FeedbackList />
         )}

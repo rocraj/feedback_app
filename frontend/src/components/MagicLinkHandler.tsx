@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import FeedbackForm from './FeedbackForm';
 import { requestMagicLink, validateMagicLink } from '../api/feedbackApi';
 
 interface MagicLinkProps {
   apiUrl: string;
+  redirectToMain?: boolean;
 }
 
-const MagicLinkHandler: React.FC<MagicLinkProps> = ({ apiUrl }) => {
+const MagicLinkHandler: React.FC<MagicLinkProps> = ({ apiUrl, redirectToMain = false }) => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [isValidating, setIsValidating] = useState<boolean>(true);
   const [isValid, setIsValid] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
@@ -30,6 +32,12 @@ const MagicLinkHandler: React.FC<MagicLinkProps> = ({ apiUrl }) => {
           if (response.status === 'success') {
             setIsValid(true);
             setEmail(emailParam);
+            
+            // If redirectToMain is true, redirect to main feedback page with email and token
+            if (redirectToMain) {
+              navigate(`/?email=${encodeURIComponent(emailParam)}&token=${encodeURIComponent(tokenParam)}`);
+              return;
+            }
           } else {
             setIsValid(false);
             setError('Invalid or expired magic link.');
@@ -47,7 +55,7 @@ const MagicLinkHandler: React.FC<MagicLinkProps> = ({ apiUrl }) => {
     };
 
     validateToken();
-  }, [apiUrl, emailParam, tokenParam]);
+  }, [apiUrl, emailParam, tokenParam, redirectToMain, navigate]);
 
   // Form for requesting a new magic link
   const MagicLinkRequestForm = () => {

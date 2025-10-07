@@ -29,6 +29,12 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  
+  const handleStarClick = (rating: number) => {
+    setFormData({ ...formData, rating });
+  };
+  
+  const [hoveredRating, setHoveredRating] = useState<number | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -115,7 +121,17 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({
               value={formData.email}
               onChange={handleChange}
               required
+              disabled={!!magicLinkToken}
+              className={magicLinkToken ? "verified-email" : ""}
             />
+            {magicLinkToken && (
+              <span className="verified-indicator" title="Verified email via magic link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+              </span>
+            )}
           </div>
 
           <div className="input-with-icon">
@@ -138,17 +154,31 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({
               </svg>
               Rating
             </label>
-            <select
-              name="rating"
-              value={formData.rating}
-              onChange={handleChange}
-            >
-              {[1, 2, 3, 4, 5].map((num) => (
-                <option key={num} value={num}>
-                  {num} {Array(num).fill('★').join('')}{Array(5-num).fill('☆').join('')}
-                </option>
-              ))}
-            </select>
+            <div className="star-rating">
+              <div className="star-container">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <span
+                    key={star}
+                    className={`star ${formData.rating >= star ? 'active' : ''} ${hoveredRating && hoveredRating >= star ? 'hovered' : ''}`}
+                    onClick={() => handleStarClick(star)}
+                    onMouseEnter={() => setHoveredRating(star)}
+                    onMouseLeave={() => setHoveredRating(null)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleStarClick(star);
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`Rate ${star} out of 5 stars`}
+                  >
+                    ★
+                  </span>
+                ))}
+              </div>
+              <span className="rating-value">{formData.rating}/5</span>
+            </div>
           </div>
 
           <div className="input-with-icon textarea-container">

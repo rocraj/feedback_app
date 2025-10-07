@@ -16,6 +16,37 @@ def get_all(db: Session, skip: int = 0, limit: int = 100) -> List[Feedback]:
     """Get all feedbacks with pagination."""
     return db.query(Feedback).offset(skip).limit(limit).all()
 
+def get_all_sorted(
+    db: Session, 
+    skip: int = 0, 
+    limit: int = 5,
+    sort_by: str = "created_at",
+    sort_direction: str = "desc"
+) -> List[Feedback]:
+    """Get all feedbacks with pagination and sorting."""
+    # Get the model class attributes
+    model_attrs = Feedback.__table__.columns.keys()
+    
+    # Validate sort_by field
+    if sort_by not in model_attrs:
+        sort_by = "created_at"  # Default to created_at if invalid field
+    
+    # Get the column to sort by
+    sort_column = getattr(Feedback, sort_by)
+    
+    # Apply sort direction
+    if sort_direction.lower() == "asc":
+        query = db.query(Feedback).order_by(sort_column.asc())
+    else:
+        query = db.query(Feedback).order_by(sort_column.desc())
+    
+    # Apply pagination
+    return query.offset(skip).limit(limit).all()
+
+def get_count(db: Session) -> int:
+    """Get the total count of feedback entries."""
+    return db.query(Feedback).count()
+
 def create_feedback(db: Session, feedback_in: Union[FeedbackCreate, FeedbackCaptcha, FeedbackMagicLink], 
                     user_id: Optional[UUID] = None, 
                     magic_link_id: Optional[UUID] = None) -> Feedback:

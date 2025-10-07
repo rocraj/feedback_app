@@ -18,6 +18,37 @@ async def submit_feedback(feedback_in: FeedbackCreate, db: Session = Depends(get
 
     return crud_feedback.create_feedback(db, feedback_in)
 
-@router.get("/", response_model=list[FeedbackResponse])
-async def get_all_feedback(db: Session = Depends(get_db)):
-    return crud_feedback.get_all(db)
+@router.get("/")
+async def get_all_feedback(
+    page: int = 1,
+    size: int = 5,
+    sort_by: str = "created_at",
+    sort_direction: str = "desc",
+    db: Session = Depends(get_db)
+):
+    # Calculate the offset based on page and size
+    skip = (page - 1) * size
+    
+    # Get feedbacks with pagination and sorting
+    feedbacks = crud_feedback.get_all_sorted(
+        db, 
+        skip=skip, 
+        limit=size, 
+        sort_by=sort_by, 
+        sort_direction=sort_direction
+    )
+    
+    # Get total count for pagination
+    total_count = crud_feedback.get_count(db)
+    
+    # Calculate total pages
+    total_pages = (total_count + size - 1) // size if size > 0 else 1
+    
+    # Return paginated response
+    return {
+        "items": feedbacks,
+        "total": total_count,
+        "page": page,
+        "size": size,
+        "pages": total_pages
+    }

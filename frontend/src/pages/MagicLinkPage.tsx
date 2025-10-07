@@ -19,8 +19,9 @@ const MagicLinkPage: React.FC = () => {
       <main>
         {hasEmailAndToken ? (
           // If we have email and token in the URL, use MagicLinkHandler
+          // with redirectToMain=true to redirect to the main feedback page
           <div className="magic-link-container">
-            <MagicLinkHandler apiUrl={apiUrl} />
+            <MagicLinkHandler apiUrl={apiUrl} redirectToMain={true} />
           </div>
         ) : (
           // Otherwise show a form to request a magic link

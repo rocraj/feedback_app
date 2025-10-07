@@ -110,7 +110,7 @@
       }
       
       input, textarea {
-        padding-left: 1rem;
+        padding-left: 2.5rem; /* Increased padding to prevent text from overlapping with icon */
       }
       
       &:focus-within svg {
@@ -153,7 +153,7 @@
       position: relative;
       z-index: 1;
       @include neomorphism-inset-light;
-  
+
       &:focus {
         border-color: $primary-blue;
         @include neomorphism-inset-light-focus;
@@ -173,9 +173,49 @@
       &:hover {
         border-color: $border-input-hover;
       }
+      
+      &:disabled {
+        background-color: #f8f9fa;
+        cursor: not-allowed;
+        opacity: 0.8;
+      }
+      
+      &.verified-email {
+        background-color: rgba(46, 204, 113, 0.05);
+        border-color: rgba(46, 204, 113, 0.5);
+        padding-right: 2.5rem;
+        font-weight: 500;
+        
+        /* Dark mode */
+        @media (prefers-color-scheme: dark) {
+          background-color: rgba(46, 204, 113, 0.1);
+        }
+      }
     }
     
-    textarea {
+    /* Verified email indicator */
+    .verified-indicator {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+      color: #2ecc71;
+      background-color: rgba(46, 204, 113, 0.1);
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: help;
+      
+      svg {
+        position: static;
+        transform: none;
+        color: #2ecc71;
+      }
+    }    textarea {
       min-height: 120px;
       resize: vertical;
       line-height: 1.5;
@@ -204,13 +244,93 @@
         }
       }
       
-      select {
-        appearance: none;
-        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237f8c8d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-        background-repeat: no-repeat;
-        background-position: right 12px center;
-        background-size: 16px;
-        padding-right: 40px;
+      .star-rating {
+        display: flex;
+        align-items: center;
+        background-color: $bg-light-alt;
+        border: 1px solid $border-input;
+        border-radius: 12px;
+        padding: 0.875rem 1rem;
+        @include neomorphism-inset-light;
+        position: relative;
+        
+        /* Container for stars to create hover effect correctly */
+        .star-container {
+          display: flex;
+          position: relative;
+        }
+        
+        .star {
+          cursor: pointer;
+          font-size: 1.8rem;
+          color: #d1d1d1;
+          margin-right: 0.25rem;
+          user-select: none;
+          transition: all 0.2s ease;
+          position: relative;
+          
+          &:hover {
+            transform: scale(1.1);
+          }
+          
+          &:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.5);
+            border-radius: 4px;
+          }
+          
+          &.active {
+            color: #FFD700;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+          }
+          
+          &.hovered {
+            color: #FFD700;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
+            opacity: 0.8;
+          }
+          
+          /* Add little bounce effect on click */
+          &:active {
+            transform: scale(0.9);
+            transition: transform 0.1s;
+          }
+        }
+        
+        .rating-value {
+          margin-left: auto;
+          font-weight: 600;
+          font-size: 1rem;
+          color: #555;
+          background: rgba(255, 255, 255, 0.5);
+          padding: 0.35rem 0.6rem;
+          border-radius: 20px;
+          box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.1);
+          transition: all 0.3s ease;
+          min-width: 40px;
+          text-align: center;
+        }
+        
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+          background-color: $royal-blue-accent;
+          border-color: $border-input-dark;
+          @include neomorphism-inset-dark;
+          
+          .star {
+            color: #555;
+            
+            &.active {
+              color: #FFD700;
+              text-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
+            }
+          }
+          
+          .rating-value {
+            color: $text-light;
+            background: rgba(255, 255, 255, 0.1);
+          }
+        }
       }
     }
   
