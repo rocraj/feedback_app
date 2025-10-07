@@ -47,13 +47,13 @@ const FeedbackPage: React.FC = () => {
           onClick={() => switchTab('form')} 
           className={`tab-button ${activeTab === 'form' ? 'active' : ''}`}
         >
-          Submit Feedback
+          <span className="tab-icon">📝</span> Submit Feedback
         </button>
         <button 
           onClick={() => switchTab('list')} 
           className={`tab-button ${activeTab === 'list' ? 'active' : ''}`}
         >
-          View All Feedback
+          <span className="tab-icon">📋</span> View All Feedback
         </button>
       </div>
       

@@ -52,6 +52,13 @@
       cursor: pointer;
       transition: all 0.2s ease;
       color: $text-light-enhanced; /* Light blue text */
+      display: flex;
+      align-items: center;
+      
+      .tab-icon {
+        margin-right: 0.5rem;
+        font-size: 1.1rem;
+      }
       
       &:hover {
         color: $primary-blue-light; /* Brighter blue on hover */
@@ -96,14 +103,46 @@
     }
     
     .tab-navigation {
+      flex-direction: column;
+      border-bottom: none;
+      margin-bottom: 1rem;
+      
       .tab-button {
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        border: 1px solid $royal-blue-light;
+        border-radius: 6px;
+        margin-bottom: 0.5rem;
+        
+        &.active {
+          background-color: rgba($primary-blue, 0.15);
+          border-color: $primary-blue;
+          border-bottom-color: $primary-blue;
+        }
       }
     }
     
     .tab-content {
       padding: 1rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .feedback-header {
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      .auth-options {
+        font-size: 0.9rem;
+      }
+    }
+    
+    .tab-navigation {
+      .tab-button {
+        padding: 0.6rem 0.75rem;
+      }
     }
   }
 }
