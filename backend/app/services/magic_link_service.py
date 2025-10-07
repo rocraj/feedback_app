@@ -54,7 +54,7 @@ def create_magic_link(db: Session, email: str) -> str:
 def send_magic_link_email(email: str, token: str) -> bool:
     """Send an email with the magic link."""
     frontend_url = settings.FRONTEND_URL
-    magic_link = f"{frontend_url}/feedback?email={email}&token={token}"
+    magic_link = f"{frontend_url}/magic-link?email={email}&token={token}"
     
     logger.info(f"Generating magic link email for {email}")
     logger.info(f"Magic link URL: {magic_link}")

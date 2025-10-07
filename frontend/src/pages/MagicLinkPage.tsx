@@ -33,8 +33,19 @@ const MagicLinkPage: React.FC = () => {
         )}
       </main>
       
-      <footer>
+      <footer className="magic-link-footer">
         <p>© 2025 Feedback App | Secure and Private</p>
+        <div className="docs-links">
+          <a href="https://github.com/rocraj/feedback_app/blob/main/README.md" target="_blank" rel="noopener noreferrer">
+            <span className="link-icon">📘</span> Documentation
+          </a>
+          <a href="https://github.com/rocraj/feedback_app/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer">
+            <span className="link-icon">📝</span> Changelog
+          </a>
+          <a href="https://github.com/rocraj/feedback_app" target="_blank" rel="noopener noreferrer">
+            <span className="link-icon">💻</span> GitHub Repository
+          </a>
+        </div>
       </footer>
     </div>
   );
