@@ -133,6 +133,8 @@ The API provides endpoints for feedback submission, magic link authentication, a
 ## Installation
 
 > **Note:** The application is fully deployed and accessible online. The installation steps below are only necessary if you want to run the application locally for development purposes.
+>
+> **Security Note:** This application uses sensitive credentials that should be provided via environment variables. Never commit actual credentials to Git repositories.
 
 ### Prerequisites
 

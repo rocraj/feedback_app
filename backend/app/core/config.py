@@ -47,11 +47,11 @@ class Settings(BaseSettings):
     
     # Email settings
     EMAIL_BACKEND: str = "SMTP"  # Options: SMTP, CONSOLE (hardcoded)
-    SMTP_HOST: Optional[str] = "smtp.gmail.com"
-    SMTP_PORT: Optional[int] = 587
-    SMTP_USER: Optional[str] = "srimaheshraju@gmail.com"
-    SMTP_PASSWORD: Optional[str] = "xodv zmsr ukhc rajz"
-    EMAILS_FROM_EMAIL: str = "feedback@example.com"
+    SMTP_HOST: Optional[str] = os.getenv("SMTP_HOST", "smtp.gmail.com")
+    SMTP_PORT: Optional[int] = int(os.getenv("SMTP_PORT", "587"))
+    SMTP_USER: Optional[str] = os.getenv("SMTP_USER", "example@gmail.com")
+    SMTP_PASSWORD: Optional[str] = os.getenv("SMTP_PASSWORD", "")  # Set via environment variable only
+    EMAILS_FROM_EMAIL: str = os.getenv("EMAILS_FROM_EMAIL", "feedback@example.com")
     
     # Magic link settings
     MAGIC_LINK_EXPIRY_HOURS: int = 24
@@ -67,7 +67,7 @@ class Settings(BaseSettings):
     # Note: This is a property, meaning it's calculated every time it's accessed.
     @property
     def DATABASE_URL(self) -> str:
-        # Use environment variable if set, otherwise use the hardcoded connection string
+        # Use environment variable if set, otherwise construct from component parts
         db_url = os.getenv("DATABASE_URL")
         if db_url:
             # Convert postgres:// to postgresql+psycopg2:// for SQLAlchemy
@@ -75,8 +75,14 @@ class Settings(BaseSettings):
                 db_url = db_url.replace("postgres://", "postgresql+psycopg2://", 1)
             return db_url
         
-        # Fallback to hardcoded Aiven Cloud database connection
-        return f"postgresql+psycopg2://avnadmin:AVNS_wIEjTHNWLYGpcL1Rfrr@feedback-mini-app-feedback-app.b.aivencloud.com:28220/defaultdb?sslmode=require"
+        # Fallback to using component parts (should be set via environment variables)
+        db_user = os.getenv("DB_USER", "postgres")
+        db_password = os.getenv("DB_PASSWORD", "password")  # Should be overridden in production
+        db_host = os.getenv("DB_HOST", "localhost")
+        db_port = os.getenv("DB_PORT", "5432")
+        db_name = os.getenv("DB_NAME", "feedback_db")
+        
+        return f"postgresql+psycopg2://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
     
 # Initialize settings to be imported by other modules
 settings = Settings()

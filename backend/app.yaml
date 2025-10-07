@@ -7,9 +7,20 @@ handlers:
     script: auto
 
 env_variables:
-  # Full PostgreSQL connection string instead of individual components
-  DATABASE_URL: "postgres://avnadmin:AVNS_wIEjTHNWLYGpcL1Rfrr@feedback-mini-app-feedback-app.b.aivencloud.com:28220/defaultdb?sslmode=require"
+  # Database and environment variables should be set through Google Cloud Secret Manager
+  # or directly in the Google Cloud Console. These are placeholders.
   CORS_ORIGINS: '["https://feedback-mini.web.app", "http://localhost:5173", "http://localhost:3000"]'
   FRONTEND_URL: https://feedback-mini.web.app
-  SECRET_KEY: supersecretkey123
   EMAIL_BACKEND: SMTP
+  
+  # NOTE: The following values should be set in Google Cloud environment
+  # variables and not committed to Git:
+  # - DATABASE_URL
+  # - DB_USER
+  # - DB_PASSWORD
+  # - DB_HOST
+  # - DB_PORT
+  # - DB_NAME
+  # - SMTP_USER
+  # - SMTP_PASSWORD
+  # - SECRET_KEY
