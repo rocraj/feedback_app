@@ -1,23 +1,28 @@
+@use '../styles' as *;
+
 /* Container */
 .feedback-form-container {
     display: flex;
     justify-content: center;
     align-items: flex-start;
     width: 100%;
+    box-sizing: border-box;
     padding: 1rem;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
   
   /* Card */
   .feedback-card {
-    background-color: #ffffff;
+    background-color: $bg-light;
     border-radius: 12px;
     padding: 2.5rem;
     width: 100%;
+    box-sizing: border-box;
     max-width: 600px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    @include neomorphism-light;
     transition: all 0.3s ease;
     animation: fadeIn 0.8s ease-out;
+    border: 1px solid $border-light;
     
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
@@ -25,7 +30,8 @@
     }
     
     &:hover {
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+      @include neomorphism-light-hover;
+      transform: translateY(-2px);
     }
   
     h2 {
@@ -33,14 +39,14 @@
       font-weight: 600;
       text-align: center;
       margin-bottom: 2rem;
-      color: #2c3e50;
+      color: $light-green;
       display: flex;
       align-items: center;
       justify-content: center;
       
       svg {
         margin-right: 10px;
-        color: #3498db;
+        color: $primary-blue;
         animation: fadeInRotate 1s ease;
       }
       
@@ -60,10 +66,11 @@
         display: block;
         width: 60px;
         height: 4px;
-        background: linear-gradient(90deg, #3498db, #2980b9);
+        background: linear-gradient(90deg, $primary-blue, $primary-blue-dark);
         margin: 1rem auto 0;
-        border-radius: 2px;
+        border-radius: 8px;
         animation: expandWidth 1s ease;
+        box-shadow: 2px 2px 4px $shadow-light, -2px -2px 4px $highlight-light;
       }
       
       @keyframes expandWidth {
@@ -74,11 +81,11 @@
     
     /* Dark mode support */
     @media (prefers-color-scheme: dark) {
-      background-color: #16213e;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+      background-color: $royal-blue-dark;
+      @include neomorphism-dark;
       
       h2 {
-        color: #ecf0f1;
+        color: $bright-green; /* Brighter light green for dark mode for better contrast */
       }
     }
   }
@@ -103,11 +110,11 @@
       }
       
       input, textarea {
-        padding-left: 40px;
+        padding-left: 1rem;
       }
       
       &:focus-within svg {
-        color: #3498db;
+        color: $primary-blue;
       }
       
       &.textarea-container svg {
@@ -134,25 +141,27 @@
     select,
     textarea {
       width: 100%;
+      box-sizing: border-box;
       padding: 0.875rem 1rem;
-      background-color: #ffffff;
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
+      background-color: $bg-light-alt;
+      border: 1px solid $border-input;
+      border-radius: 12px;
       color: #333;
       font-size: 1rem;
       outline: none;
       transition: all 0.3s ease;
       position: relative;
       z-index: 1;
+      @include neomorphism-inset-light;
   
       &:focus {
-        border-color: #3498db;
-        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+        border-color: $primary-blue;
+        @include neomorphism-inset-light-focus;
         transform: translateY(-2px);
       }
       
       &::placeholder {
-        color: #95a5a6;
+        color: $text-muted-light;
         transition: all 0.3s ease;
       }
       
@@ -162,7 +171,7 @@
       }
       
       &:hover {
-        border-color: #bdc3c7;
+        border-color: $border-input-hover;
       }
     }
     
@@ -184,14 +193,14 @@
       label {
         margin-bottom: 0.5rem;
         font-weight: 500;
-        color: #34495e;
+        color: $text-dark;
         font-size: 1rem;
         display: flex;
         align-items: center;
         
         svg {
           margin-right: 6px;
-          color: #f1c40f;
+          color: $star-yellow;
         }
       }
       
@@ -219,7 +228,7 @@
         display: block;
         margin-bottom: 0.5rem;
         font-weight: 500;
-        color: #34495e;
+        color: $text-dark;
         font-size: 1rem;
       }
     }
@@ -229,30 +238,41 @@
       input,
       select,
       textarea {
-        background-color: #1a1a2e;
-        border-color: #2c3e50;
-        color: #ecf0f1;
+        background-color: $royal-blue-accent;
+        border-color: $border-input-dark;
+        border-top-color: rgba(0, 0, 0, 0.3);
+        border-left-color: rgba(0, 0, 0, 0.3);
+        color: $text-light;
+        @include neomorphism-inset-dark;
         
         &::placeholder {
-          color: #7f8c8d;
+          color: $text-muted;
         }
         
         &:focus {
-          border-color: #3498db;
+          border-color: $primary-blue;
           box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
         }
       }
       
       .rating-field label,
       .form-group label {
-        color: #ecf0f1;
+        color: $text-light;
+      }
+      
+      button {
+        @include button-neomorphism-dark;
+        
+        &:hover {
+          @include button-neomorphism-dark-hover;
+        }
       }
     }
   
     button {
       width: 100%;
       padding: 1rem;
-      background: linear-gradient(90deg, #3498db, #2980b9);
+      @include primary-gradient;
       color: white;
       border: none;
       border-radius: 8px;
@@ -261,7 +281,7 @@
       cursor: pointer;
       transition: all 0.3s ease;
       margin-top: 1rem;
-      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+      @include button-neomorphism-light;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -284,9 +304,9 @@
       }
   
       &:hover {
-        background: linear-gradient(90deg, #2980b9, #3498db);
+        @include primary-gradient-hover;
         transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+        @include button-neomorphism-light-hover;
         
         &:before {
           left: 100%;
@@ -298,7 +318,7 @@
       }
       
       &:disabled {
-        background: #95a5a6;
+        background: $text-muted-light;
         cursor: not-allowed;
         transform: none;
         box-shadow: none;
@@ -322,27 +342,73 @@
       }
     }
   
+  .feedback-response {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeInUp 0.4s ease-out;
+    
+    @keyframes fadeInUp {
+      from { 
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .view-feedbacks-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1rem;
+      padding: 0.75rem 1.25rem;
+      background-color: $bg-feedback-link;
+      color: $primary-blue;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 6px 6px 12px $shadow-light, -6px -6px 12px $highlight-light;
+      
+      svg {
+        margin-right: 8px;
+      }
+      
+      &:hover {
+        background-color: $bg-feedback-link-hover;
+        transform: translateY(-2px);
+        box-shadow: 8px 8px 16px $shadow-light-stronger, -8px -8px 16px $highlight-light-stronger;
+      }
+      
+      &:active {
+        transform: translateY(0);
+      }
+      
+      /* Dark mode */
+      @media (prefers-color-scheme: dark) {
+        background-color: $royal-blue-medium;
+        color: $primary-blue;
+        
+        &:hover {
+          background-color: $royal-blue-light;
+        }
+      }
+    }
+    
     .feedback-message {
       text-align: center;
       font-weight: 500;
-      margin-top: 1.5rem;
       padding: 1rem;
       border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      animation: fadeInUp 0.4s ease-out;
-  
-      @keyframes fadeInUp {
-        from { 
-          opacity: 0;
-          transform: translateY(10px);
-        }
-        to { 
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
+      width: 100%;
   
       svg {
         margin-right: 10px;
@@ -350,30 +416,30 @@
       }
       
       &.success {
-        background-color: #e8f5e9;
-        color: #27ae60; /* green */
-        border-left: 4px solid #27ae60;
-        box-shadow: 0 2px 10px rgba(39, 174, 96, 0.1);
+        background-color: $bg-success-light;
+        color: $success-green; /* green */
+        border-left: 4px solid $success-green;
+        box-shadow: 6px 6px 12px rgba(39, 174, 96, 0.08), -6px -6px 12px $highlight-light;
         
         /* Dark mode */
         @media (prefers-color-scheme: dark) {
-          background-color: rgba(39, 174, 96, 0.15);
-          box-shadow: 0 2px 10px rgba(39, 174, 96, 0.05);
+          background-color: $bg-success-dark;
+          box-shadow: 6px 6px 12px $shadow-dark, -6px -6px 12px $highlight-dark-stronger;
         }
       }
   
       &.warning {
-        background-color: #ffebee;
-        color: #e74c3c; /* red */
-        border-left: 4px solid #e74c3c;
-        box-shadow: 0 2px 10px rgba(231, 76, 60, 0.1);
+        background-color: $bg-warning-light;
+        color: $warning-red; /* red */
+        border-left: 4px solid $warning-red;
+        box-shadow: 6px 6px 12px rgba(231, 76, 60, 0.08), -6px -6px 12px $highlight-light;
         
         /* Dark mode */
         @media (prefers-color-scheme: dark) {
-          background-color: rgba(231, 76, 60, 0.15);
-          box-shadow: 0 2px 10px rgba(231, 76, 60, 0.05);
+          background-color: $bg-warning-dark;
+          box-shadow: 6px 6px 12px $shadow-dark, -6px -6px 12px $highlight-dark-stronger;
         }
       }
     }
   }
-  
+}

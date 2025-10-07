@@ -1,15 +1,17 @@
+@use '../styles' as *;
+
 .feedback-list-container {
   margin: 2rem 0;
   padding: 1.5rem;
-  background-color: #ffffff;
+  background-color: $royal-blue-dark;
   border-radius: 12px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 5px 20px $shadow-dark;
   transition: all 0.3s ease;
 
   h2 {
     margin-bottom: 1.8rem;
-    color: #2c3e50;
-    text-align: center;
+    color: $text-light;
+
     font-size: 1.8rem;
     font-weight: 600;
     display: flex;
@@ -18,7 +20,7 @@
     
     svg {
       margin-right: 12px;
-      color: #3498db;
+      color: $primary-blue;
       animation: fadeInRotate 1s ease;
     }
     
@@ -38,7 +40,7 @@
       display: block;
       width: 60px;
       height: 4px;
-      background: linear-gradient(90deg, #3498db, #2980b9);
+      background: linear-gradient(90deg, $primary-blue, $primary-blue-dark);
       margin: 1rem auto 0;
       border-radius: 2px;
       animation: expandWidth 1s ease;
@@ -50,22 +52,14 @@
     }
   }
   
-  /* Dark mode support */
-  @media (prefers-color-scheme: dark) {
-    background-color: #16213e;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-    
-    h2 {
-      color: #ecf0f1;
-    }
-  }
+  /* We're using dark mode by default now */
 
   .loading,
   .error,
   .empty-state {
     padding: 3rem;
     text-align: center;
-    background-color: #f8f9fa;
+    background-color: $royal-blue-medium;
     border-radius: 12px;
     margin: 1.5rem 0;
     display: flex;
@@ -76,13 +70,13 @@
   }
 
   .loading {
-    color: #2980b9;
+    color: $primary-blue-dark;
     
     .loading-spinner {
       width: 48px;
       height: 48px;
       border: 3px solid rgba(41, 128, 185, 0.2);
-      border-top: 3px solid #3498db;
+      border-top: 3px solid $primary-blue;
       border-radius: 50%;
       animation: spin 1s linear infinite;
       margin-bottom: 1.5rem;
@@ -95,16 +89,16 @@
   }
 
   .error {
-    color: #c0392b;
-    background-color: #ffebee;
-    border-left: 4px solid #e74c3c;
+    color: $warning-red;
+    background-color: $bg-warning-light;
+    border-left: 4px solid $warning-red;
     
     .error-icon {
       font-size: 2.5rem;
       margin-bottom: 1rem;
       
       svg {
-        fill: #e74c3c;
+        fill: $warning-red;
       }
     }
     
@@ -115,7 +109,7 @@
   }
   
   .empty-state {
-    color: #7f8c8d;
+    color: $border-input-hover;
     animation: fadeInUp 0.8s ease;
     
     @keyframes fadeInUp {
@@ -131,7 +125,7 @@
     
     .empty-icon {
       margin-bottom: 1.5rem;
-      color: #bdc3c7;
+      color: $border-input-hover;
       animation: pulse 2s ease infinite;
       
       @keyframes pulse {
@@ -141,7 +135,7 @@
       }
       
       svg {
-        stroke: #95a5a6;
+        stroke: $text-muted-light;
         fill: none;
       }
     }
@@ -150,11 +144,11 @@
       font-size: 1.3rem;
       font-weight: 600;
       margin-bottom: 0.75rem;
-      color: #34495e;
+      color: $text-light;
     }
     
     .empty-submessage {
-      color: #7f8c8d;
+      color: $border-input-hover;
       font-size: 1rem;
       line-height: 1.6;
       max-width: 80%;
@@ -166,31 +160,31 @@
     .loading,
     .error,
     .empty-state {
-      background-color: #1a1a2e;
+      background-color: $royal-blue-medium;
     }
     
     .loading {
-      color: #3498db;
+      color: $primary-blue;
     }
     
     .error {
-      color: #e74c3c;
-      background-color: rgba(231, 76, 60, 0.1);
+      color: $warning-red;
+      background-color: $bg-warning-dark;
     }
     
     .empty-state {
-      color: #bdc3c7;
+      color: $border-input-hover;
       
       .empty-icon {
-        color: #34495e;
+        color: $text-dark;
       }
       
       .empty-message {
-        color: #ecf0f1;
+        color: $text-light;
       }
       
       .empty-submessage {
-        color: #bdc3c7;
+        color: $border-input-hover;
       }
     }
   }
@@ -198,6 +192,126 @@
   .feedback-table-wrapper {
     overflow-x: auto;
     max-width: 100%;
+    
+    .pagination-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.5rem;
+      padding: 0.75rem 0;
+      flex-wrap: wrap;
+      gap: 1rem;
+      
+      .pagination-info {
+        color: #bdc3c7;
+        font-size: 0.9rem;
+      }
+      
+      .pagination-buttons {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        
+        .pagination-button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 36px;
+          height: 36px;
+          border: 1px solid #2c3e50;
+          background-color: #1a1a2e;
+          border-radius: 6px;
+          font-size: 0.95rem;
+          color: #ecf0f1;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          
+          &:hover:not(:disabled) {
+            background-color: $bg-feedback-link;
+            border-color: $primary-blue;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 6px rgba(52, 152, 219, 0.15);
+          }
+          
+          &:active:not(:disabled) {
+            transform: translateY(0);
+          }
+          
+          &.active {
+            @include primary-gradient;
+            color: white;
+            border-color: $primary-blue-dark;
+            font-weight: 600;
+          }
+          
+          &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+          }
+          
+          &.prev, &.next {
+            
+            svg {
+              stroke: $text-muted;
+            }
+            
+            &:hover:not(:disabled) svg {
+              stroke: $primary-blue;
+            }
+          }
+        }
+        
+        .pagination-ellipsis {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 36px;
+          height: 36px;
+          font-size: 1rem;
+          color: #bdc3c7;
+        }
+      }
+    }
+    
+    /* Dark mode support for pagination */
+    @media (prefers-color-scheme: dark) {
+      .pagination-controls {
+        .pagination-info {
+          color: #bdc3c7;
+        }
+        
+        .pagination-buttons {
+          .pagination-button {
+            background-color: #1a1a2e;
+            border-color: #2c3e50;
+            color: #ecf0f1;
+            
+            &:hover:not(:disabled) {
+              background-color: #1e3c5a;
+              border-color: #3498db;
+            }
+            
+            &.active {
+              background: linear-gradient(90deg, #3498db, #2980b9);
+            }
+            
+            &.prev, &.next {
+              svg {
+                stroke: #bdc3c7;
+              }
+              
+              &:hover:not(:disabled) svg {
+                stroke: #3498db;
+              }
+            }
+          }
+          
+          .pagination-ellipsis {
+            color: #bdc3c7;
+          }
+        }
+      }
+    }
   }
 
   .feedback-table {
@@ -205,7 +319,7 @@
     border-collapse: separate;
     border-spacing: 0;
     font-size: 1rem;
-    color: #2c3e50;
+    color: $text-light;
     border-radius: 8px;
     overflow: hidden;
     animation: fadeIn 0.6s ease-in-out;
@@ -217,24 +331,18 @@
     
     th, td {
       padding: 1rem 0.75rem;
-      border-bottom: 1px solid #e0e0e0;
+      border-bottom: 1px solid $border-input-dark;
       text-align: left;
     }
     
     th {
-      background: linear-gradient(180deg, #f2f6fc, #e9f0fa);
+      background: linear-gradient(180deg, $royal-blue-light, #0f2a46);
       font-weight: 700;
       cursor: pointer;
       user-select: none;
       position: relative;
       transition: all 0.2s ease;
-      color: #2c3e50;
-      
-      &:hover {
-        background: linear-gradient(180deg, #e5eef9, #d9e6f7);
-        transform: translateY(-2px);
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-      }
+      color: $text-light;
       
       &.sorted {
         background: linear-gradient(180deg, #d4e6f1, #c4ddf0);
@@ -280,53 +388,34 @@
       }
     }
     
-    tr:nth-child(even) td {
-      background-color: #f8f9fa;
-    }
-    
     tr {
       transition: all 0.3s ease;
-      
-      &:hover td {
-        background-color: #edf7ff;
-        transform: translateX(2px);
-      }
     }
     
     /* Dark mode support */
     @media (prefers-color-scheme: dark) {
-      color: #ecf0f1;
+      color: $text-light;
       
       th, td {
-        border-bottom: 1px solid #2c3e50;
+        border-bottom: 1px solid $border-input-dark;
       }
       
       th {
-        background: linear-gradient(180deg, #1e3c5a, #0f2a46);
-        color: #ecf0f1;
-        
-        &:hover {
-          background: linear-gradient(180deg, #2a4d6e, #1a3c5e);
-        }
+        background: linear-gradient(180deg, $royal-blue-light, #0f2a46);
+        color: $text-light;
         
         &.sorted {
-          background: linear-gradient(180deg, #2980b9, #2472a4);
+          background: linear-gradient(180deg, $primary-blue, $primary-blue-dark);
         }
       }
       
-      tr:nth-child(even) td {
-        background-color: #16213e;
-      }
-      
-      tr:hover td {
-        background-color: #1a304d;
-      }
+      /* No alternating row colors or hover effects in dark mode */
     }
     
     .date-cell {
       min-width: 120px;
       white-space: nowrap;
-      color: #34495e;
+      color: #bdc3c7;
       font-size: 0.9rem;
       font-weight: 500;
     }
@@ -369,7 +458,7 @@
     .rating-cell {
       min-width: 100px;
       white-space: nowrap;
-      color: #f1c40f;
+      color: $star-yellow;
       font-size: 1.1rem;
       font-weight: 600;
       
@@ -383,23 +472,19 @@
       min-width: 200px;
       max-width: 400px;
       line-height: 1.5;
-      color: #34495e;
+      color: $text-light;
       
       .feedback-content {
         font-size: 0.95rem;
-        background-color: #f8f9fa;
+        background-color: $royal-blue-medium;
         padding: 12px;
         border-radius: 8px;
-        border-left: 4px solid #3498db;
+        border-left: 4px solid $primary-blue;
         white-space: pre-wrap;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 2px 8px $shadow-dark;
         transition: all 0.3s ease;
         
-        &:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
-          border-left-width: 6px;
-        }
+        /* No hover effects for feedback content */
       }
     }
     
@@ -422,12 +507,12 @@
       }
       
       .feedback-cell {
-        color: #ecf0f1;
+        color: $text-light;
         
         .feedback-content {
-          background-color: #1a1a2e;
-          border-left: 4px solid #3498db;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+          background-color: $royal-blue-medium;
+          border-left: 4px solid $primary-blue;
+          box-shadow: 0 2px 8px $shadow-dark;
         }
       }
     }
@@ -435,11 +520,12 @@
 
   // Responsive adjustments
   @media (max-width: 768px) {
-    padding: 0.75rem;
-    
-    h2 {
-      font-size: 1.5rem;
-    }
+    .feedback-list-container {
+      padding: 0.75rem;
+      
+      h2 {
+        font-size: 1.5rem;
+      }
     
     .feedback-table {
       font-size: 0.85rem;
@@ -466,4 +552,5 @@
       }
     }
   }
+}
 }

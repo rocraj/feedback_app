@@ -1,0 +1,129 @@
+// Main color palette
+$royal-blue-dark: #16213e;  // Dark royal blue background
+$royal-blue-darker: #0f1a31; // Darker royal blue (5% darker than dark)
+$royal-blue-medium: #1a304d; // Medium royal blue (for card backgrounds in dark mode)
+$royal-blue-light: #1e3c5a;  // Lighter royal blue (for hover states)
+$royal-blue-accent: #1f2b45; // Royal blue accent (for form inputs in dark mode)
+
+// Accent colors
+$primary-blue: #3498db;      // Primary blue (for buttons, links)
+$primary-blue-dark: #2980b9; // Dark blue (for gradients, hover states)
+$primary-blue-light: #5aafed; // Light blue (10% lighter than primary)
+$primary-blue-lighter: #81c5f0; // Even lighter blue (20% lighter than primary)
+$success-green: #27ae60;     // Success green
+$light-green: #4caf50;       // Light green for light mode
+$bright-green: #8bc34a;      // Brighter green for dark mode contrast
+$warning-red: #e74c3c;       // Warning red
+$star-yellow: #f1c40f;       // Star rating yellow
+
+// Text colors
+$text-dark: #34495e;         // Dark text for light mode
+$text-light: #ecf0f1;        // Light text for dark mode
+$text-light-enhanced: #f5f7f8; // Lighter version of text-light (10% lighter)
+$text-light-dimmed: #c4c8c9;  // Dimmer version of text-light (15% darker)
+$text-muted: #7f8c8d;        // Muted text
+$text-muted-light: #95a5a6;  // Lighter muted text
+
+// Background colors
+$bg-light: #ffffff;          // Light background
+$bg-light-alt: #f0f2f5;      // Alternative light background (for inputs)
+$bg-feedback-link: #f2f6fc;  // Feedback link background in light mode
+$bg-feedback-link-hover: #edf7ff; // Feedback link hover background in light mode
+$bg-success-light: #e8f5e9;  // Success message background in light mode
+$bg-warning-light: #ffebee;  // Warning message background in light mode
+$bg-success-dark: rgba(39, 174, 96, 0.15); // Success message background in dark mode
+$bg-warning-dark: rgba(231, 76, 60, 0.15); // Warning message background in dark mode
+
+// Border colors
+$border-light: rgba(255, 255, 255, 0.8);   // Light borders
+$border-input: rgba(255, 255, 255, 0.6);   // Input borders in light mode
+$border-input-dark: rgba(44, 62, 80, 0.7); // Input borders in dark mode
+$border-input-hover: #bdc3c7; // Input border hover in light mode
+
+// Shadow colors and values
+$shadow-light: rgba(0, 0, 0, 0.08);        // Light shadow
+$shadow-light-stronger: rgba(0, 0, 0, 0.1); // Stronger light shadow
+$shadow-light-strongest: rgba(0, 0, 0, 0.15); // Strongest light shadow
+$shadow-dark: rgba(0, 0, 0, 0.2);         // Dark shadow
+$shadow-dark-stronger: rgba(0, 0, 0, 0.3); // Stronger dark shadow
+
+$highlight-light: rgba(255, 255, 255, 0.8); // Light highlight
+$highlight-light-stronger: rgba(255, 255, 255, 0.9); // Stronger light highlight
+$highlight-dark: rgba(30, 40, 70, 0.2);    // Dark highlight
+$highlight-dark-stronger: rgba(30, 40, 70, 0.3); // Stronger dark highlight
+$highlight-dark-strongest: rgba(30, 40, 70, 0.5); // Strongest dark highlight
+
+// Neomorphism mixins
+@mixin neomorphism-light {
+  box-shadow: 
+    12px 12px 24px $shadow-light, 
+    -12px -12px 24px $highlight-light;
+}
+
+@mixin neomorphism-light-hover {
+  box-shadow: 
+    15px 15px 30px $shadow-light-stronger, 
+    -15px -15px 30px $highlight-light-stronger;
+}
+
+@mixin neomorphism-dark {
+  box-shadow: 
+    12px 12px 24px $shadow-dark-stronger, 
+    -12px -12px 24px $highlight-dark-strongest;
+}
+
+@mixin neomorphism-dark-hover {
+  box-shadow: 
+    15px 15px 30px $shadow-dark, 
+    -15px -15px 30px $highlight-dark-stronger;
+}
+
+@mixin neomorphism-inset-light {
+  box-shadow: 
+    inset 2px 2px 5px $shadow-light, 
+    inset -2px -2px 5px $highlight-light;
+}
+
+@mixin neomorphism-inset-light-focus {
+  box-shadow: 
+    inset 3px 3px 6px $shadow-light, 
+    inset -3px -3px 6px $highlight-light;
+}
+
+@mixin neomorphism-inset-dark {
+  box-shadow: 
+    inset 2px 2px 5px $shadow-dark, 
+    inset -2px -2px 5px $highlight-dark;
+}
+
+@mixin button-neomorphism-light {
+  box-shadow: 
+    8px 8px 16px $shadow-light-stronger, 
+    -8px -8px 16px rgba(255, 255, 255, 0.4);
+}
+
+@mixin button-neomorphism-light-hover {
+  box-shadow: 
+    10px 10px 20px $shadow-light-strongest, 
+    -10px -10px 20px rgba(255, 255, 255, 0.5);
+}
+
+@mixin button-neomorphism-dark {
+  box-shadow: 
+    8px 8px 16px $shadow-dark, 
+    -8px -8px 16px $highlight-dark-stronger;
+}
+
+@mixin button-neomorphism-dark-hover {
+  box-shadow: 
+    10px 10px 20px $shadow-dark-stronger, 
+    -10px -10px 20px $highlight-dark-strongest;
+}
+// Gradient backgrounds
+@mixin primary-gradient {
+  background: linear-gradient(90deg, $primary-blue, $primary-blue-dark);
+}
+
+@mixin primary-gradient-hover {
+  background: linear-gradient(90deg, $primary-blue-dark, $primary-blue);
+}

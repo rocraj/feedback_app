@@ -11,7 +11,7 @@ const App: React.FC = () => {
         <Route path="/" element={<FeedbackPage />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/magic-link" element={<MagicLinkPage />} />
-        <Route path="/feedback" element={<MagicLinkPage />} />
+        <Route path="/feedback" element={<FeedbackPage />} />
       </Routes>
     </Router>
   );

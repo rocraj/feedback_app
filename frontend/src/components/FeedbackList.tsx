@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchFeedbacks } from "../api/feedbackApi";
+import type { FeedbackQueryParams } from "../api/feedbackApi";
 import "./FeedbackList.scss";
 
 interface Feedback {
@@ -13,47 +14,85 @@ interface Feedback {
   created_at: string;
 }
 
+interface PaginatedResponse {
+  items: Feedback[];
+  total: number;
+  page: number;
+  size: number;
+  pages: number;
+}
+
+const ITEMS_PER_PAGE = 5;
+
 const FeedbackList: React.FC = () => {
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [sortField, setSortField] = useState<keyof Feedback>("created_at");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [totalItems, setTotalItems] = useState<number>(0);
 
   useEffect(() => {
+    // Create a flag to prevent state updates if the component unmounts
+    let isMounted = true;
+    
     const loadFeedbacks = async () => {
       try {
         setLoading(true);
-        setError(null);
-        const data = await fetchFeedbacks();
-        setFeedbacks(data || []);
+        
+        if (isMounted) setLoading(true);
+        if (isMounted) setError(null);
+        
+        const queryParams: FeedbackQueryParams = {
+          page: currentPage,
+          size: ITEMS_PER_PAGE,
+          sortBy: sortField,
+          sortDirection: sortDirection
+        };
+        
+        const response = await fetchFeedbacks(queryParams);
+        
+        // Only update state if the component is still mounted
+        if (!isMounted) return;
+        
+        // Handle the paginated response
+        if (response && 'items' in response) {
+          // Handle the paginated response structure
+          const paginatedResponse = response as PaginatedResponse;
+          setFeedbacks(paginatedResponse.items || []);
+          setTotalPages(paginatedResponse.pages);
+          setTotalItems(paginatedResponse.total);
+        } else {
+          // Fallback for backward compatibility
+          setFeedbacks(response || []);
+        }
       } catch (err) {
-        console.error("Error loading feedbacks:", err);
-        setError("Failed to load feedback data. Please try again later.");
+        if (isMounted) {
+          console.error("Error loading feedbacks:", err);
+          setError("Failed to load feedback data. Please try again later.");
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
     
     loadFeedbacks();
-  }, []);
+    
+    // Cleanup function to prevent memory leaks and state updates after unmount
+    return () => {
+      isMounted = false;
+    };
+  }, [currentPage, sortField, sortDirection]);
 
-  // Sort feedbacks based on current sort field and direction
-  const sortedFeedbacks = [...feedbacks].sort((a, b) => {
-    if (sortField === "rating") {
-      // For numeric fields
-      return sortDirection === "asc" 
-        ? a[sortField] - b[sortField] 
-        : b[sortField] - a[sortField];
-    } else {
-      // For string fields
-      const aValue = String(a[sortField] || "");
-      const bValue = String(b[sortField] || "");
-      return sortDirection === "asc" 
-        ? aValue.localeCompare(bValue) 
-        : bValue.localeCompare(aValue);
-    }
-  });
+  // Use the feedbacks directly from the API, as they're already sorted
+  // This prevents unnecessary re-renders and loops
+  const sortedFeedbacks = feedbacks;
 
   const handleSort = (field: keyof Feedback) => {
     if (field === sortField) {
@@ -64,12 +103,78 @@ const FeedbackList: React.FC = () => {
       setSortField(field);
       setSortDirection(field === "created_at" ? "desc" : "asc");
     }
+    
+    // Reset to first page when sort changes
+    setCurrentPage(1);
   };
-
-  // Format date to a readable format
+  
+  // Handle page navigation
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+  
+  // Generate pagination numbers
+  const generatePaginationItems = () => {
+    const pages: number[] = [];
+    const maxVisiblePages = 5;
+    
+    if (totalPages <= maxVisiblePages) {
+      // Show all pages if total pages is less than or equal to max visible
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      // Calculate range with ellipsis
+      let startPage: number, endPage: number;
+      
+      if (currentPage <= Math.ceil(maxVisiblePages / 2)) {
+        // Near beginning
+        startPage = 1;
+        endPage = maxVisiblePages - 1;
+        pages.push(...Array.from({length: endPage}, (_, i) => i + 1));
+        pages.push(-1); // Ellipsis
+        pages.push(totalPages);
+      } else if (currentPage >= totalPages - Math.floor(maxVisiblePages / 2)) {
+        // Near end
+        startPage = totalPages - (maxVisiblePages - 2);
+        pages.push(1);
+        pages.push(-1); // Ellipsis
+        pages.push(...Array.from({length: maxVisiblePages - 2}, (_, i) => startPage + i));
+      } else {
+        // Middle
+        startPage = currentPage - 1;
+        endPage = currentPage + 1;
+        pages.push(1);
+        pages.push(-1); // Left ellipsis
+        pages.push(...Array.from({length: endPage - startPage + 1}, (_, i) => startPage + i));
+        pages.push(-2); // Right ellipsis
+        pages.push(totalPages);
+      }
+    }
+    
+    return pages;
+  };  // Format date to a readable format with explicit UTC time
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleString();
+    if (!dateString) return 'N/A';
+    
+    try {
+      // Create a Date object from the ISO string (server provides UTC time)
+      const date = new Date(dateString);
+      
+      // Format with ISO string to preserve UTC and explicitly show timezone
+      // Format: "Oct 7, 2025, 10:30:00 AM (UTC)"
+      return `${date.toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      })}, ${date.toLocaleTimeString(undefined, {
+        hour: '2-digit',
+        minute: '2-digit'
+      })} (UTC)`;
+    } catch (error) {
+      console.error("Error formatting date:", error);
+      return 'Invalid date';
+    }
   };
 
   // Render stars for ratings with improved display
@@ -169,6 +274,53 @@ const FeedbackList: React.FC = () => {
               ))}
             </tbody>
           </table>
+          
+          {/* Pagination controls */}
+          {totalPages > 1 && (
+            <div className="pagination-controls">
+              <div className="pagination-info">
+                Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, totalItems)} of {totalItems} entries
+              </div>
+              
+              <div className="pagination-buttons">
+                <button 
+                  onClick={() => handlePageChange(currentPage - 1)} 
+                  disabled={currentPage === 1}
+                  className="pagination-button prev"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                  </svg>
+                </button>
+                
+                {generatePaginationItems().map((page, index) => {
+                  if (page < 0) {
+                    // Render ellipsis
+                    return <span key={`ellipsis-${index}`} className="pagination-ellipsis">...</span>;
+                  }
+                  return (
+                    <button 
+                      key={`page-${page}`}
+                      onClick={() => handlePageChange(page)}
+                      className={`pagination-button ${currentPage === page ? 'active' : ''}`}
+                    >
+                      {page}
+                    </button>
+                  );
+                })}
+                
+                <button 
+                  onClick={() => handlePageChange(currentPage + 1)} 
+                  disabled={currentPage === totalPages}
+                  className="pagination-button next"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -1,3 +1,5 @@
+@use '../styles' as *;
+
 .magic-link-page {
   max-width: 1200px;
   margin: 0 auto;
@@ -5,7 +7,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #f8f9fa;
+  background-color: $bg-light-alt;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   
   header {
@@ -14,7 +16,7 @@
     
     h1 {
       font-size: 2.5rem;
-      color: #2c3e50;
+      color: $text-dark;
       margin-bottom: 1rem;
       font-weight: 700;
       letter-spacing: -0.5px;
@@ -24,7 +26,7 @@
         display: block;
         width: 60px;
         height: 4px;
-        background: linear-gradient(90deg, #3498db, #2980b9);
+        @include primary-gradient;
         margin: 1rem auto 0;
         border-radius: 2px;
       }
@@ -39,9 +41,9 @@
     padding: 1rem 0;
     
     .magic-link-container {
-      background: #ffffff;
+      background: $bg-light;
       border-radius: 12px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 5px 20px $shadow-light;
       width: 100%;
       max-width: 580px;
       padding: 2.5rem;
@@ -49,14 +51,14 @@
       
       h2 {
         font-size: 1.8rem;
-        color: #2c3e50;
+        color: $text-dark;
         margin-bottom: 1.5rem;
         text-align: center;
         font-weight: 600;
       }
       
       p {
-        color: #7f8c8d;
+        color: $text-muted;
         line-height: 1.6;
         margin-bottom: 2rem;
         text-align: center;
@@ -73,7 +75,7 @@
           display: block;
           margin-bottom: 0.5rem;
           font-weight: 500;
-          color: #34495e;
+          color: $text-dark;
           font-size: 1rem;
         }
         
@@ -84,11 +86,11 @@
           border-radius: 8px;
           font-size: 1rem;
           transition: all 0.2s ease;
-          background-color: #ffffff;
+          background-color: $bg-light;
           
           &:focus {
             outline: none;
-            border-color: #3498db;
+            border-color: $primary-blue;
             box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
           }
         }
@@ -97,7 +99,7 @@
       button {
         width: 100%;
         padding: 1rem;
-        background: linear-gradient(90deg, #3498db, #2980b9);
+        @include primary-gradient;
         color: white;
         border: none;
         border-radius: 8px;
@@ -108,7 +110,7 @@
         margin-top: 1rem;
         
         &:hover {
-          background: linear-gradient(90deg, #2980b9, #3498db);
+          @include primary-gradient-hover;
           transform: translateY(-2px);
           box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
         }
@@ -118,7 +120,7 @@
         }
         
         &:disabled {
-          background: #95a5a6;
+          background: $text-muted-light;
           cursor: not-allowed;
           transform: none;
           box-shadow: none;
@@ -130,7 +132,7 @@
   .loading {
     text-align: center;
     padding: 2rem;
-    color: #7f8c8d;
+    color: $text-muted;
     font-size: 1.1rem;
     display: flex;
     flex-direction: column;
@@ -143,7 +145,7 @@
       height: 40px;
       margin-bottom: 1rem;
       border: 3px solid #f3f3f3;
-      border-top: 3px solid #3498db;
+      border-top: 3px solid $primary-blue;
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
@@ -164,8 +166,8 @@
   .secure-badge {
     display: inline-flex;
     align-items: center;
-    background-color: #e8f5e9;
-    color: #27ae60;
+    background-color: $bg-success-light;
+    color: $success-green;
     padding: 0.5rem 1rem;
     border-radius: 50px;
     font-size: 0.85rem;
@@ -189,7 +191,7 @@
     
     h2 {
       margin-bottom: 1.5rem;
-      color: #2c3e50;
+      color: $text-dark;
       font-size: 1.8rem;
       font-weight: 600;
       text-align: center;
@@ -197,20 +199,20 @@
     
     p {
       text-align: center;
-      color: #7f8c8d;
+      color: $text-muted;
       margin-bottom: 2rem;
       line-height: 1.6;
     }
   }
   
   .error-message {
-    background-color: #ffebee;
-    color: #e74c3c;
+    background-color: $bg-warning-light;
+    color: $warning-red;
     padding: 1rem;
     border-radius: 8px;
     margin-bottom: 1.5rem;
     font-weight: 500;
-    border-left: 4px solid #e74c3c;
+    border-left: 4px solid $warning-red;
     font-size: 0.95rem;
     display: flex;
     align-items: flex-start;
@@ -223,13 +225,13 @@
   }
   
   .success-message {
-    background-color: #e8f5e9;
-    color: #27ae60;
+    background-color: $bg-success-light;
+    color: $success-green;
     padding: 1rem;
     border-radius: 8px;
     margin-bottom: 1.5rem;
     font-weight: 500;
-    border-left: 4px solid #27ae60;
+    border-left: 4px solid $success-green;
     font-size: 0.95rem;
     display: flex;
     align-items: flex-start;
@@ -249,21 +251,21 @@
   .request-magic-link-container {
     width: 100%;
     max-width: 580px;
-    background: #ffffff;
+    background: $bg-light;
     border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 5px 20px $shadow-light;
     padding: 2.5rem;
     
     h2 {
       font-size: 1.8rem;
       margin-bottom: 1rem;
-      color: #2c3e50;
+      color: $text-dark;
       text-align: center;
       font-weight: 600;
     }
     
     p {
-      color: #7f8c8d;
+      color: $text-muted;
       text-align: center;
       margin-bottom: 2rem;
       line-height: 1.6;
@@ -273,7 +275,7 @@
   footer {
     margin-top: 3rem;
     text-align: center;
-    color: #7f8c8d;
+    color: $text-muted;
     font-size: 0.9rem;
     padding: 1.5rem 0;
   }
@@ -303,59 +305,59 @@
   
   /* Dark mode support */
   @media (prefers-color-scheme: dark) {
-    background-color: #1a1a2e;
+    background-color: $royal-blue-medium;
     
     header {
       h1 {
-        color: #ecf0f1;
+        color: $text-light;
       }
     }
     
     main {
       .magic-link-container {
-        background: #16213e;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        background: $royal-blue-dark;
+        box-shadow: 0 5px 20px $shadow-dark;
       }
       
       h2 {
-        color: #ecf0f1;
+        color: $bright-green;
       }
       
       p {
-        color: #bdc3c7;
+        color: $border-input-hover;
       }
       
       .form-group {
         label {
-          color: #ecf0f1;
+          color: $text-light;
         }
         
         input {
-          background-color: #1a1a2e;
-          border-color: #2c3e50;
-          color: #ecf0f1;
+          background-color: $royal-blue-medium;
+          border-color: $border-input-dark;
+          color: $text-light;
           
           &:focus {
-            border-color: #3498db;
+            border-color: $primary-blue;
           }
         }
       }
     }
     
     .request-magic-link-container {
-      background: #16213e;
+      background: $royal-blue-dark;
       
       h2 {
-        color: #ecf0f1;
+        color: $bright-green;
       }
       
       p {
-        color: #bdc3c7;
+        color: $border-input-hover;
       }
     }
     
     footer {
-      color: #bdc3c7;
+      color: $border-input-hover;
     }
   }
 }

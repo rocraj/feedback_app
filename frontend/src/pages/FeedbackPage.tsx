@@ -1,11 +1,35 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import FeedbackForm from "../components/FeedbackForm";
 import FeedbackList from "../components/FeedbackList";
 import "./FeedbackPage.scss";
 
 const FeedbackPage: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'form' | 'list'>('form');
+  
+  // Parse the hash from URL when component mounts or URL changes
+  useEffect(() => {
+    const hash = location.hash.replace('#', '');
+    
+    if (hash === 'latest') {
+      setActiveTab('list');
+    } else {
+      setActiveTab('form');
+    }
+  }, [location.hash]); // Only depend on location.hash
+  
+  // Programmatically update tab (for cases where we need to switch tabs from code)
+  const switchTab = (tab: 'form' | 'list') => {
+    if (tab === activeTab) return;
+    
+    const hash = tab === 'list' ? '#latest' : '';
+    navigate(hash, { replace: true }); // Use replace to avoid adding to history stack
+  };
+  
+  // We don't need this second useEffect as it's causing a loop
+  // The navigation is now handled within the switchTab function
   
   return (
     <div className="feedback-page">
@@ -20,14 +44,14 @@ const FeedbackPage: React.FC = () => {
       
       <div className="tab-navigation">
         <button 
+          onClick={() => switchTab('form')} 
           className={`tab-button ${activeTab === 'form' ? 'active' : ''}`}
-          onClick={() => setActiveTab('form')}
         >
           Submit Feedback
         </button>
         <button 
+          onClick={() => switchTab('list')} 
           className={`tab-button ${activeTab === 'list' ? 'active' : ''}`}
-          onClick={() => setActiveTab('list')}
         >
           View All Feedback
         </button>

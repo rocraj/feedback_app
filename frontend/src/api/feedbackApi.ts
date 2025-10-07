@@ -78,12 +78,28 @@ export const validateMagicLink = async (email: string, token: string) => {
   }
 };
 
-// Fetch all feedbacks (for display or admin purposes)
-export const fetchFeedbacks = async () => {
+// Interface for pagination and sorting parameters
+export interface FeedbackQueryParams {
+  page?: number;
+  size?: number;
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
+}
+
+// Fetch feedbacks with pagination (for display or admin purposes)
+export const fetchFeedbacks = async (params?: FeedbackQueryParams) => {
   try {
-    console.log(`Fetching feedbacks from ${API_BASE_URL}/feedback`);
-    const response = await axios.get(`${API_BASE_URL}/feedback`);
-    console.log("Fetched feedback data:", response.data);
+    const { page = 1, size = 20, sortBy = 'created_at', sortDirection = 'desc' } = params || {};
+    
+    const response = await axios.get(`${API_BASE_URL}/feedback`, {
+      params: {
+        page,
+        size,
+        sort_by: sortBy,
+        sort_direction: sortDirection
+      }
+    });
+    
     return response.data;
   } catch (error: any) {
     console.error("Error fetching feedbacks:", error);

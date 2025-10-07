@@ -1,3 +1,5 @@
+@use '../styles' as *;
+
 .feedback-page {
   max-width: 1200px;
   margin: 0 auto;
@@ -5,6 +7,8 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background-color: $royal-blue-darker; /* Royal dark blue background */
+  color: $text-light;
   
   .feedback-header {
     margin-bottom: 2rem;
@@ -12,17 +16,18 @@
     
     h1 {
       font-size: 2.25rem;
-      color: #2c3e50;
+      color: $bright-green; /* Light green heading, matching other components */
       margin-bottom: 1rem;
+      text-shadow: 0 2px 4px $shadow-dark;
     }
     
     .auth-options {
       font-size: 1rem;
-      color: #34495e;
+      color: $text-light-enhanced; /* Lighter blue text for better contrast */
       font-weight: 500;
       
       .magic-link-option {
-        color: #2980b9;
+        color: $primary-blue-light; /* Brighter blue for links */
         font-weight: 600;
         text-decoration: none;
         
@@ -36,7 +41,7 @@
   .tab-navigation {
     display: flex;
     margin-bottom: 1.5rem;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid $royal-blue-light; /* Darker border for tabs */
     
     .tab-button {
       padding: 0.85rem 1.75rem;
@@ -46,15 +51,15 @@
       border-bottom: 3px solid transparent;
       cursor: pointer;
       transition: all 0.2s ease;
-      color: #34495e;
+      color: $text-light-enhanced; /* Light blue text */
       
       &:hover {
-        color: #3498db;
+        color: $primary-blue-light; /* Brighter blue on hover */
       }
       
       &.active {
-        color: #2980b9;
-        border-bottom-color: #2980b9;
+        color: $primary-blue-lighter; /* Bright active tab text */
+        border-bottom-color: $primary-blue-lighter; /* Matching border color */
         font-weight: 600;
       }
       
@@ -66,17 +71,17 @@
   
   .tab-content {
     flex-grow: 1;
-    background-color: #ffffff;
+    background-color: $royal-blue-dark; /* Royal dark blue for content area */
     border-radius: 8px;
     padding: 1.5rem;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 3px 12px $shadow-dark-stronger; /* Deeper shadow for depth */
   }
   
   .feedback-footer {
     margin-top: 3rem;
     text-align: center;
     font-size: 0.9rem;
-    color: #34495e;
+    color: $text-light-dimmed; /* Muted blue-gray for footer */
     padding: 1rem 0;
     font-weight: 500;
   }
