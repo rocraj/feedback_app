@@ -1,5 +1,7 @@
 # Feedback App
 
+## 🌐 Live Demo: [https://feedback-mini.web.app](https://feedback-mini.web.app)
+
 A modern, full-stack feedback management system built with **React (Vite + TypeScript)** on the frontend and **FastAPI (Python)** on the backend, storing data in **PostgreSQL**. The application provides a clean, professional interface for submitting and viewing feedback, with multiple authentication options including Magic Links for secure, frictionless user experience.
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)

@@ -1,0 +1,38 @@
+# Git files
+.git
+.gitignore
+
+# Virtual environment
+venv
+env
+.env
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pytest_cache/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Local development settings
+.env.local
+.env.development.local
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Log files
+*.log
+
+# Docker files (no need to include in the build)
+Dockerfile
+.dockerignore

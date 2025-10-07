@@ -25,10 +25,10 @@ class Settings(BaseSettings):
     SECRET_KEY: str = os.getenv("SECRET_KEY", "supersecretkey123")
     
     # CORS
-    CORS_ORIGINS: List[str] = ["http://localhost:5173", "http://localhost:3000", "http://127.0.0.1:5173", "http://127.0.0.1:3000"]
+    CORS_ORIGINS: List[str] = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173,http://127.0.0.1:3000,https://feedback-mini.web.app").split(",")
     
     # Frontend URL (for magic links)
-    FRONTEND_URL: str = "http://localhost:5173"
+    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:5173")
     
     # Email settings
     EMAIL_BACKEND: str = "SMTP"  # Options: SMTP, CONSOLE

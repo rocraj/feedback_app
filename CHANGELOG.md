@@ -1,4 +1,19 @@
 ```markdown
+🏁 Sprint 3 — Version 1.2.0 (Production Deployment)
+
+Release Date: 2025-10-07
+Status: ✅ Completed
+
+🚀 Deployment
+- Deployed frontend to Firebase Hosting at https://feedback-mini.web.app
+- Updated CORS configuration to allow requests from production domain
+- Configured environment variables for production deployment
+
+🎨 UI Enhancements
+- Updated styling for dark theme feedback list
+- Set pagination to 5 items per page for better readability
+- Fixed mobile responsiveness issues
+
 🏁 Sprint 2 — Version 1.1.0 (Magic Link Authentication)
 
 Release Date: 2025-10-07
