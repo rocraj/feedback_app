@@ -20,7 +20,7 @@ load_dotenv()
 # --- Initialize FastAPI app with detailed metadata ---
 app = FastAPI(
     title="Feedback App Backend",
-    version="1.0.0",
+    version="1.1.0",
     description=(
         "Backend API for the **Feedback Management System** — "
         "supports simple feedback submission (one per email) "
