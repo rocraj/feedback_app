@@ -1,31 +1,25 @@
 import os
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Optional, List
 import json
-
-# These values are kept for reference but not used since we always connect to Aiven cloud
-# In development environment, set defaults (unused now)
-
-os.environ["POSTGRES_USER"] = "postgres"
-os.environ["POSTGRES_PASSWORD"] = "password"
-os.environ["POSTGRES_DB"] = "feedback_db"
-os.environ["POSTGRES_HOST"] = "localhost" # Changed from 'feedback-db' for local testing
-os.environ["POSTGRES_PORT"] = "5432" # 5432 is the default, no need to set if default is used
-os.environ["FRONTEND_URL"] = "http://localhost:5173"
-os.environ["EMAIL_BACKEND"] = "SMTP"  # Options: SMTP, CONSOLE
-
 
 class Settings(BaseSettings):
     """
     Application-wide settings managed by Pydantic Settings.
     This class loads its fields directly from the environment variables.
     """
+    # Allow environment variable override
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+    
     # Core API settings
     PROJECT_NAME: str = "Feedback App Backend"
     API_V1_STR: str = "/api/v1"
 
     # Security
-    SECRET_KEY: str = os.getenv("SECRET_KEY", "supersecretkey123")
+    SECRET_KEY: str 
+    
+    # Frontend URL (for magic links)
+    FRONTEND_URL: str
     
     # CORS - Handle as a property instead of a field to avoid JSON parsing issues
     @property
@@ -42,32 +36,50 @@ class Settings(BaseSettings):
                 "http://127.0.0.1:5173", "http://127.0.0.1:3000", 
                 "https://feedback-mini.web.app"]
     
-    # Frontend URL (for magic links)
-    FRONTEND_URL: str = "https://feedback-mini.web.app"
-    
-    # Email settings
-    EMAIL_BACKEND: str = "SMTP"  # Options: SMTP, CONSOLE (hardcoded)
-    SMTP_HOST: Optional[str] = os.getenv("SMTP_HOST", "smtp.gmail.com")
-    SMTP_PORT: Optional[int] = int(os.getenv("SMTP_PORT", "587"))
-    SMTP_USER: Optional[str] = os.getenv("SMTP_USER", "example@gmail.com")
-    SMTP_PASSWORD: Optional[str] = os.getenv("SMTP_PASSWORD", "")  # Set via environment variable only
-    EMAILS_FROM_EMAIL: str = os.getenv("EMAILS_FROM_EMAIL", "feedback@example.com")
+    # Email settings - use environment variables with defaults
+    EMAIL_BACKEND: str = "SMTP"  # Options: SMTP, CONSOLE
+    SMTP_HOST: str
+    SMTP_PORT: int
+    SMTP_USER: str
+    SMTP_PASSWORD: str
+    EMAILS_FROM_EMAIL: str
     
     # Magic link settings
     MAGIC_LINK_EXPIRY_HOURS: int = 24
     
-    # Database settings (These will be pulled from the environment)
-    POSTGRES_USER: str
-    POSTGRES_PASSWORD: str
-    POSTGRES_DB: str
-    POSTGRES_HOST: str = "feedback-db" 
-    POSTGRES_PORT: int = 5432
+    # Database settings mapped directly from environment variables
+    DB_USER: str
+    DB_PASSWORD: str
+    DB_NAME: str
+    DB_HOST: str
+    DB_PORT: int
     
-    # Generate the database connection URL for SQLModel
+    # For backwards compatibility
+    @property
+    def POSTGRES_USER(self) -> str:
+        return self.DB_USER
+        
+    @property
+    def POSTGRES_PASSWORD(self) -> str:
+        return self.DB_PASSWORD
+        
+    @property
+    def POSTGRES_DB(self) -> str:
+        return self.DB_NAME
+        
+    @property
+    def POSTGRES_HOST(self) -> str:
+        return self.DB_HOST
+        
+    @property
+    def POSTGRES_PORT(self) -> int:
+        return self.DB_PORT
+        
+    # Generate the database connection URL for SQLAlchemy
     # Note: This is a property, meaning it's calculated every time it's accessed.
     @property
     def DATABASE_URL(self) -> str:
-        # Use environment variable if set, otherwise construct from component parts
+        # Use direct DATABASE_URL environment variable if set
         db_url = os.getenv("DATABASE_URL")
         if db_url:
             # Convert postgres:// to postgresql+psycopg2:// for SQLAlchemy
@@ -75,28 +87,46 @@ class Settings(BaseSettings):
                 db_url = db_url.replace("postgres://", "postgresql+psycopg2://", 1)
             return db_url
         
-        # Fallback to using component parts (should be set via environment variables)
-        db_user = os.getenv("DB_USER", "postgres")
-        db_password = os.getenv("DB_PASSWORD", "password")  # Should be overridden in production
-        db_host = os.getenv("DB_HOST", "localhost")
-        db_port = os.getenv("DB_PORT", "5432")
-        db_name = os.getenv("DB_NAME", "feedback_db")
+        # Check if running in Google Cloud environment
+        is_gcp = os.getenv("GAE_APPLICATION") is not None
         
-        return f"postgresql+psycopg2://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+        if is_gcp:
+            # Cloud SQL connection via Unix socket (for managed Cloud SQL)
+            instance_connection_name = os.getenv("INSTANCE_CONNECTION_NAME", "")
+            if instance_connection_name:
+                # Format specifically for PostgreSQL with psycopg2 driver in App Engine
+                socket_path = f"/cloudsql/{instance_connection_name}"
+                return f"postgresql+psycopg2://{self.DB_USER}:{self.DB_PASSWORD}@/{self.DB_NAME}?host={socket_path}"
+            
+            # For external PostgreSQL instance (like Aiven), use standard connection
+            # App Engine can connect to external databases using standard connection strings
+            return f"postgresql+psycopg2://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+        
+        # Standard connection string for local or other environments
+        return f"postgresql+psycopg2://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
     
 # Initialize settings to be imported by other modules
-settings = Settings()
-
-# --- Example Usage ---
-print("--- Settings Loaded Successfully ---")
-print(f"Project Name: {settings.PROJECT_NAME}")
-print(f"CORS Origins: {settings.CORS_ORIGINS}")
-# Mask sensitive parts of the database URL for security
-db_url = settings.DATABASE_URL
-if ":" in db_url and "@" in db_url:
-    parts = db_url.split("@")
-    masked_credentials = parts[0].split("://")[0] + "://" + parts[0].split("://")[1].split(":")[0] + ":****"
-    masked_url = masked_credentials + "@" + parts[1]
-    print(f"Database URL: {masked_url}")
-else:
-    print("Database URL: [configured]")
+try:
+    settings = Settings()
+    
+    # --- Log Configuration ---
+    print("--- Settings Loaded Successfully ---")
+    print(f"Project Name: {settings.PROJECT_NAME}")
+    print(f"Frontend URL: {settings.FRONTEND_URL}")
+    
+    # Mask sensitive parts of the database URL for security
+    db_url = settings.DATABASE_URL
+    if ":" in db_url and "@" in db_url:
+        parts = db_url.split("@")
+        masked_credentials = parts[0].split("://")[0] + "://" + parts[0].split("://")[1].split(":")[0] + ":****"
+        masked_url = masked_credentials + "@" + parts[1]
+        print(f"Database URL: {masked_url}")
+    else:
+        print(f"Database URL: {db_url.split('://')[0]}://*****")
+    
+    print(f"DB Host: {settings.DB_HOST}")
+    print(f"Email Configuration: SMTP via {settings.SMTP_HOST}")
+except Exception as e:
+    print(f"Error loading settings: {e}")
+    print("Please check your .env file and ensure all required variables are set")
+    raise
