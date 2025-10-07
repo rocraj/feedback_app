@@ -2,6 +2,8 @@
 
 ## 🌐 Live Demo: [https://feedback-mini.web.app](https://feedback-mini.web.app)
 
+> **Note:** The live demo requires the backend to be running locally. Please follow the [Installation](#installation) instructions to set up the backend server before testing the demo. Backend deployment to a cloud service is planned for future releases.
+
 A modern, full-stack feedback management system built with **React (Vite + TypeScript)** on the frontend and **FastAPI (Python)** on the backend, storing data in **PostgreSQL**. The application provides a clean, professional interface for submitting and viewing feedback, with multiple authentication options including Magic Links for secure, frictionless user experience.
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)
