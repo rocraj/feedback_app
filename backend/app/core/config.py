@@ -91,4 +91,12 @@ settings = Settings()
 print("--- Settings Loaded Successfully ---")
 print(f"Project Name: {settings.PROJECT_NAME}")
 print(f"CORS Origins: {settings.CORS_ORIGINS}")
-print(f"Database URL: {settings.DATABASE_URL}")
+# Mask sensitive parts of the database URL for security
+db_url = settings.DATABASE_URL
+if ":" in db_url and "@" in db_url:
+    parts = db_url.split("@")
+    masked_credentials = parts[0].split("://")[0] + "://" + parts[0].split("://")[1].split(":")[0] + ":****"
+    masked_url = masked_credentials + "@" + parts[1]
+    print(f"Database URL: {masked_url}")
+else:
+    print("Database URL: [configured]")
