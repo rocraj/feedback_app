@@ -49,7 +49,14 @@ const FeedbackPage: React.FC = () => {
   return (
     <div className="feedback-page">
       <header className="feedback-header">
-        <h1>Customer Feedback System</h1>
+        <div className="header-content">
+          <img 
+            src="/feedback_logo.svg" 
+            alt="Feedback App Logo" 
+            className="header-logo"
+          />
+          <h1>Customer Feedback System</h1>
+        </div>
         <div className="auth-options">
           <p>
             Prefer to use a magic link? <Link to="/magic-link" className="magic-link-option">Click here</Link> to get a secure link via email.

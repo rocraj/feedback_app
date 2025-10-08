@@ -81,7 +81,7 @@ async def root():
     return {
         "status": "ok",
         "message": "Feedback App Backend running successfully",
-        "version": "1.0.0"
+        "version": "1.1.0"
     }
 
 @app.get("/health/db", tags=["Health"])

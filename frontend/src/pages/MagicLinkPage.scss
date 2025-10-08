@@ -14,10 +14,31 @@
     margin-bottom: 3rem;
     text-align: center;
     
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      
+      .header-logo {
+        width: 70px;
+        height: 70px;
+        margin-right: 1rem;
+        filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.2));
+        animation: float 4s ease-in-out infinite;
+      }
+      
+      @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+      }
+    }
+    
     h1 {
       font-size: 2.5rem;
       color: $text-dark;
-      margin-bottom: 1rem;
+      margin-bottom: 0;
       font-weight: 700;
       letter-spacing: -0.5px;
 
@@ -43,18 +64,45 @@
     .magic-link-container {
       background: $bg-light;
       border-radius: 12px;
-      box-shadow: 0 5px 20px $shadow-light;
       width: 100%;
       max-width: 580px;
       padding: 2.5rem;
       transition: all 0.3s ease;
+      @include neomorphism-light;
+      border: 1px solid $border-light;
+      
+      &:hover {
+        @include neomorphism-light-hover;
+        transform: translateY(-2px);
+      }
       
       h2 {
         font-size: 1.8rem;
-        color: $text-dark;
+        color: $light-green;
         margin-bottom: 1.5rem;
         text-align: center;
         font-weight: 600;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        
+        &:after {
+          content: '';
+          display: block;
+          width: 60px;
+          height: 4px;
+          background: linear-gradient(90deg, $primary-blue, $primary-blue-dark);
+          margin: 1rem auto 0;
+          border-radius: 8px;
+          animation: expandWidth 1s ease;
+          box-shadow: 2px 2px 4px $shadow-light, -2px -2px 4px $highlight-light;
+        }
+        
+        @keyframes expandWidth {
+          from { width: 0; }
+          to { width: 60px; }
+        }
       }
       
       p {
@@ -75,24 +123,55 @@
           display: block;
           margin-bottom: 0.5rem;
           font-weight: 500;
-          color: $text-dark;
+          color: $text-light-dimmed;
           font-size: 1rem;
         }
+      }
+      
+      // Higher specificity selector for inputs
+      .form-group input,
+      .form-group input[type="email"],
+      .form-group input[type="text"],
+      input,
+      input[type="email"],
+      input[type="text"] {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0.875rem 1rem;
+        border: 1px solid $border-input;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background-color: $royal-blue-accent;
+        border-color: $border-input-dark;
+        border-top-color: rgba(0, 0, 0, 0.3);
+        border-left-color: rgba(0, 0, 0, 0.3);
+        color: $text-light;
+        @include neomorphism-inset-dark;
         
-        input {
-          width: 100%;
-          padding: 0.875rem 1rem;
-          border: 1px solid #e0e0e0;
-          border-radius: 8px;
-          font-size: 1rem;
-          transition: all 0.2s ease;
-          background-color: $bg-light;
-          
-          &:focus {
-            outline: none;
-            border-color: $primary-blue;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
-          }
+        position: relative;
+        z-index: 1;
+        
+        
+        &:focus {
+          outline: none;
+          border-color: $primary-blue;
+          @include neomorphism-inset-light-focus;
+          transform: translateY(-2px);
+        }
+        
+        &::placeholder {
+          color: $text-muted-light;
+          transition: all 0.3s ease;
+        }
+        
+        &:focus::placeholder {
+          opacity: 0.7;
+          transform: translateX(10px);
+        }
+        
+        &:hover {
+          border-color: $border-input-hover;
         }
       }
       
@@ -106,13 +185,38 @@
         font-size: 1rem;
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
         margin-top: 1rem;
+        @include button-neomorphism-light;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        
+        &:before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+          transition: all 0.6s ease;
+        }
+        
+        svg {
+          margin-right: 8px;
+        }
         
         &:hover {
           @include primary-gradient-hover;
           transform: translateY(-2px);
-          box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+          @include button-neomorphism-light-hover;
+          
+          &:before {
+            left: 100%;
+          }
         }
         
         &:active {
@@ -253,15 +357,38 @@
     max-width: 580px;
     background: $bg-light;
     border-radius: 12px;
-    box-shadow: 0 5px 20px $shadow-light;
     padding: 2.5rem;
+    @include neomorphism-light;
+    border: 1px solid $border-light;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      @include neomorphism-light-hover;
+      transform: translateY(-2px);
+    }
     
     h2 {
       font-size: 1.8rem;
-      margin-bottom: 1rem;
-      color: $text-dark;
+      margin-bottom: 1.5rem;
+      color: $light-green;
       text-align: center;
       font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      
+      &:after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, $primary-blue, $primary-blue-dark);
+        margin: 1rem auto 0;
+        border-radius: 8px;
+        animation: expandWidth 1s ease;
+        box-shadow: 2px 2px 4px $shadow-light, -2px -2px 4px $highlight-light;
+      }
     }
     
     p {
@@ -318,6 +445,15 @@
     header {
       margin-bottom: 2rem;
       
+      .header-content {
+        flex-direction: column;
+        
+        .header-logo {
+          margin-right: 0;
+          margin-bottom: 0.75rem;
+        }
+      }
+      
       h1 {
         font-size: 2rem;
       }
@@ -350,12 +486,24 @@
       h1 {
         color: $text-light;
       }
+      
+      .header-logo {
+        filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.4)) brightness(1.1);
+      }
     }
     
     main {
       .magic-link-container {
         background: $royal-blue-dark;
-        box-shadow: 0 5px 20px $shadow-dark;
+        @include neomorphism-dark;
+      }
+      
+      button {
+        @include button-neomorphism-dark;
+        
+        &:hover {
+          @include button-neomorphism-dark-hover;
+        }
       }
       
       h2 {
@@ -370,21 +518,36 @@
         label {
           color: $text-light;
         }
+      }
+      
+      // Higher specificity selector for dark mode
+      .form-group input,
+      .form-group input[type="email"],
+      .form-group input[type="text"],
+      input,
+      input[type="email"],
+      input[type="text"] {
+        background-color: $royal-blue-accent;
+        border-color: $border-input-dark;
+        border-top-color: rgba(0, 0, 0, 0.3);
+        border-left-color: rgba(0, 0, 0, 0.3);
+        color: $text-light;
+        @include neomorphism-inset-dark;
         
-        input {
-          background-color: $royal-blue-medium;
-          border-color: $border-input-dark;
-          color: $text-light;
-          
-          &:focus {
-            border-color: $primary-blue;
-          }
+        &::placeholder {
+          color: $text-muted;
+        }
+        
+        &:focus {
+          border-color: $primary-blue;
+          box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
         }
       }
     }
     
     .request-magic-link-container {
       background: $royal-blue-dark;
+      @include neomorphism-dark;
       
       h2 {
         color: $bright-green;

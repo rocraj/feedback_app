@@ -13,7 +13,14 @@ const MagicLinkPage: React.FC = () => {
   return (
     <div className="magic-link-page">
       <header>
-        <h1>Feedback App</h1>
+        <div className="header-content">
+          <img 
+            src="/feedback_logo.svg" 
+            alt="Feedback App Logo" 
+            className="header-logo"
+          />
+          <h1>Feedback App</h1>
+        </div>
       </header>
       
       <main>

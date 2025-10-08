@@ -14,10 +14,30 @@
     margin-bottom: 2rem;
     text-align: center;
     
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      
+      .header-logo {
+        width: 60px;
+        height: 60px;
+        margin-right: 1rem;
+        filter: drop-shadow(0 2px 4px $shadow-dark);
+        animation: logo-pulse 3s ease-in-out infinite alternate;
+      }
+      
+      @keyframes logo-pulse {
+        from { transform: scale(1); }
+        to { transform: scale(1.1); }
+      }
+    }
+    
     h1 {
       font-size: 2.25rem;
       color: $bright-green; /* Light green heading, matching other components */
-      margin-bottom: 1rem;
+      margin-bottom: 0;
       text-shadow: 0 2px 4px $shadow-dark;
     }
     
@@ -123,6 +143,15 @@
     padding: 1rem;
     
     .feedback-header {
+      .header-content {
+        flex-direction: column;
+        
+        .header-logo {
+          margin-right: 0;
+          margin-bottom: 0.75rem;
+        }
+      }
+      
       h1 {
         font-size: 1.75rem;
       }
@@ -158,6 +187,13 @@
     .feedback-header {
       h1 {
         font-size: 1.5rem;
+      }
+      
+      .header-content {
+        .header-logo {
+          width: 50px;
+          height: 50px;
+        }
       }
       
       .auth-options {
