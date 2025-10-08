@@ -1,0 +1,278 @@
+@use '../styles' as *;
+
+.feedback-comments-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  
+  // Comment box styling
+  .feedback-comment-box {
+    background-color: $royal-blue-medium;
+    border-radius: 12px 12px 12px 0;  // Unique shape: rounded except bottom-left
+    overflow: hidden;
+    border-left: 4px solid $primary-blue;
+    box-shadow: 0 4px 10px $shadow-dark;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: fadeInSlide 0.5s ease forwards;
+    
+    @keyframes fadeInSlide {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 15px $shadow-dark;
+    }
+    
+    .comment-header {
+      padding: 1rem;
+      background: $royal-blue-accent;
+      border-bottom: 1px solid rgba($border-input-dark, 0.5);
+      
+      .rating-date {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        
+        .rating {
+          color: $star-yellow;
+          font-size: 1.2rem;
+          letter-spacing: 2px;
+        }
+        
+        .date {
+          font-size: 0.8rem;
+          color: $text-light-dimmed;
+        }
+      }
+    }
+    
+    .comment-body {
+      padding: 1.25rem;
+      background: $royal-blue-medium;
+      
+      .comment-content {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: $text-light;
+        white-space: pre-wrap;
+        background-color: rgba($royal-blue-dark, 0.3);
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 3px solid rgba($primary-blue, 0.5);
+      }
+    }
+    
+    .comment-footer {
+      padding: 1rem;
+      background: $royal-blue-dark;
+      border-top: 1px solid rgba($border-input-dark, 0.5);
+      
+      .user-info {
+        .user-name {
+          font-weight: 600;
+          font-size: 1.1rem;
+          color: $text-light;
+          margin-bottom: 0.5rem;
+        }
+        
+        .contact-info {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          
+          .email, .mobile {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            
+            svg {
+              margin-right: 8px;
+              height: 16px;
+              width: 16px;
+            }
+          }
+          
+          .email {
+            color: $primary-blue-light;
+          }
+          
+          .mobile {
+            color: $text-light-dimmed;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Loading, error, and empty states
+.feedback-comments-loading,
+.feedback-comments-error,
+.feedback-comments-empty {
+  padding: 3rem;
+  text-align: center;
+  background-color: $royal-blue-medium;
+  border-radius: 12px;
+  margin: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.feedback-comments-loading {
+  color: $primary-blue;
+  
+  .loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid rgba($primary-blue, 0.2);
+    border-top: 3px solid $primary-blue;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1.5rem;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+}
+
+.feedback-comments-error {
+  color: $warning-red;
+  background-color: $bg-warning-dark;
+  border-left: 4px solid $warning-red;
+  
+  .error-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .error-message {
+    font-weight: 500;
+    font-size: 1.1rem;
+  }
+}
+
+.feedback-comments-empty {
+  color: $border-input-hover;
+  animation: fadeInUp 0.8s ease;
+  
+  @keyframes fadeInUp {
+    from { 
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to { 
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .empty-icon {
+    margin-bottom: 1.5rem;
+    color: $border-input-hover;
+    animation: pulse 2s ease infinite;
+    
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.8; }
+    }
+    
+    svg {
+      stroke: $text-muted-light;
+      fill: none;
+    }
+  }
+  
+  .empty-message {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: $text-light;
+  }
+  
+  .empty-submessage {
+    color: $border-input-hover;
+    font-size: 1rem;
+    line-height: 1.6;
+    max-width: 80%;
+  }
+}
+
+/* Dark mode support */
+@media screen and (prefers-color-scheme: dark) {
+  .feedback-comment-box {
+    background-color: $royal-blue-medium;
+    
+    .comment-header {
+      background: rgba($royal-blue-accent, 0.4);
+    }
+    
+    .comment-body {
+      .comment-content {
+        background-color: rgba($royal-blue-dark, 0.5);
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media screen and (max-width: 600px) {
+  .feedback-comment-box {
+    .comment-header {
+      padding: 0.75rem;
+      
+      .rating-date {
+        .rating {
+          font-size: 1rem;
+        }
+        
+        .date {
+          font-size: 0.7rem;
+        }
+      }
+    }
+    
+    .comment-body {
+      padding: 1rem;
+      
+      .comment-content {
+        font-size: 0.9rem;
+        padding: 0.75rem;
+      }
+    }
+    
+    .comment-footer {
+      padding: 0.75rem;
+      
+      .user-info {
+        .user-name {
+          font-size: 1rem;
+        }
+        
+        .contact-info {
+          .email, .mobile {
+            font-size: 0.8rem;
+            
+            svg {
+              height: 14px;
+              width: 14px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

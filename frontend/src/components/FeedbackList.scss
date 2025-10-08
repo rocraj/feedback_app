@@ -156,7 +156,7 @@
   }
   
   /* Dark mode support */
-  @media (prefers-color-scheme: dark) {
+  @media screen and (prefers-color-scheme: dark) {
     .loading,
     .error,
     .empty-state {
@@ -187,13 +187,59 @@
         color: $border-input-hover;
       }
     }
+    
+    /* Dark mode for mobile card view */
+    .feedback-table-wrapper {
+      .feedback-cards {
+        .feedback-card {
+          background-color: $royal-blue-medium;
+          box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+          
+          .card-header {
+            background: $royal-blue-light;
+            
+            .name-date {
+              .name {
+                color: $text-light;
+              }
+              
+              .date {
+                color: #bdc3c7;
+              }
+            }
+          }
+          
+          .card-content {
+            .feedback-text {
+              color: $text-light;
+              background-color: rgba(0, 0, 0, 0.2);
+            }
+          }
+          
+          .card-footer {
+            background: $royal-blue-dark;
+            
+            .contact-info {
+              .email {
+                color: $primary-blue;
+              }
+              
+              .mobile {
+                color: #95a5a6;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   .feedback-table-wrapper {
     overflow-x: auto;
     max-width: 100%;
+  }
     
-    .pagination-controls {
+  .pagination-controls {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -310,7 +356,7 @@
     }
     
     /* Dark mode support for pagination */
-    @media (prefers-color-scheme: dark) {
+    @media screen and (prefers-color-scheme: dark) {
       .pagination-controls {
         .pagination-info {
           color: #bdc3c7;
@@ -554,8 +600,8 @@
     }
   }
 
-  // Responsive adjustments
-  @media (max-width: 768px) {
+  // Responsive adjustments - Mobile view
+  @media screen and (max-width: 772px) {
     .feedback-list-container {
       padding: 0.75rem;
       
@@ -575,31 +621,66 @@
           width: 100%;
         }
       }
-    
-    .feedback-table {
-      font-size: 0.85rem;
+    }
+  }
+  
+  // Smaller mobile devices
+  @media screen and (max-width: 480px) {
+    .feedback-list-container {
+      padding: 0.5rem;
       
-      th, td {
-        padding: 0.6rem;
-      }
-      
-      .feedback-cell {
-        max-width: 250px;
+      h2 {
+        font-size: 1.3rem;
         
-        .feedback-content {
-          padding: 8px;
-          font-size: 0.9rem;
+        svg {
+          width: 20px;
+          height: 20px;
         }
       }
       
-      .rating-cell {
-        font-size: 1rem;
-      }
-      
-      .date-cell {
-        font-size: 0.8rem;
+      .feedback-table-wrapper {
+        .feedback-cards {
+          .feedback-card {
+            border-radius: 8px;
+            
+            .card-header {
+              padding: 0.7rem;
+              
+              .name-date {
+                .name {
+                  font-size: 0.9rem;
+                }
+                
+                .date {
+                  font-size: 0.7rem;
+                }
+              }
+              
+              .rating {
+                font-size: 0.9rem;
+              }
+            }
+            
+            .card-content {
+              padding: 0.8rem;
+              
+              .feedback-text {
+                font-size: 0.85rem;
+                padding: 0.7rem;
+              }
+            }
+            
+            .card-footer {
+              padding: 0.7rem;
+              
+              .contact-info {
+                .email, .mobile {
+                  font-size: 0.75rem;
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
-}
-}

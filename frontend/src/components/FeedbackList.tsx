@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchFeedbacks } from "../api/feedbackApi";
 import type { FeedbackQueryParams } from "../api/feedbackApi";
+import FeedbackListComments from "./FeedbackListComments";
 import "./FeedbackList.scss";
 
 interface Feedback {
@@ -28,6 +29,7 @@ const FeedbackList: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [sortField, setSortField] = useState<keyof Feedback>("created_at");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+  const [isMobileView, setIsMobileView] = useState<boolean>(false);
   
   // Pagination state
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -37,6 +39,24 @@ const FeedbackList: React.FC = () => {
   
   // Available page size options
   const pageSizeOptions = [5, 10, 25, 50, 100];
+
+  // Effect to handle window resize and determine mobile view
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth <= 772);
+    };
+    
+    // Initial check
+    handleResize();
+    
+    // Add event listener
+    window.addEventListener('resize', handleResize);
+    
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     // Create a flag to prevent state updates if the component unmounts
@@ -237,55 +257,68 @@ const FeedbackList: React.FC = () => {
           <div className="empty-submessage">Be the first to share your thoughts!</div>
         </div>
       ) : (
-        <div className="feedback-table-wrapper">
-          <table className="feedback-table">
-            <thead>
-              <tr>
-                <th onClick={() => handleSort("created_at")} className={sortField === "created_at" ? `sorted ${sortDirection}` : ""}>
-                  Date {sortField === "created_at" && (sortDirection === "asc" ? "↑" : "↓")}
-                </th>
-                <th onClick={() => handleSort("first_name")} className={sortField === "first_name" ? `sorted ${sortDirection}` : ""}>
-                  Name {sortField === "first_name" && (sortDirection === "asc" ? "↑" : "↓")}
-                </th>
-                <th onClick={() => handleSort("rating")} className={sortField === "rating" ? `sorted ${sortDirection}` : ""}>
-                  Rating {sortField === "rating" && (sortDirection === "asc" ? "↑" : "↓")}
-                </th>
-                <th>Feedback</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedFeedbacks.map((fb) => (
-                <tr key={fb.id}>
-                  <td className="date-cell">{formatDate(fb.created_at)}</td>
-                  <td className="name-cell">
-                    <div>{fb.first_name} {fb.last_name}</div>
-                    <div className="email">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                        <polyline points="22,6 12,13 2,6"></polyline>
-                      </svg>
-                      {fb.email}
-                    </div>
-                    {fb.mobile && (
-                      <div className="mobile">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
-                          <line x1="12" y1="18" x2="12" y2="18"></line>
-                        </svg>
-                        {fb.mobile}
-                      </div>
-                    )}
-                  </td>
-                  <td className="rating-cell">{renderStars(fb.rating)}</td>
-                  <td className="feedback-cell">
-                    <div className="feedback-content">{fb.feedback}</div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          
-          {/* Pagination controls */}
+        <div>
+          {/* Conditional rendering based on screen size */}
+          {!isMobileView ? (
+            /* Desktop View - Table */
+            <div className="feedback-table-wrapper">
+              <table className="feedback-table">
+                <thead>
+                  <tr>
+                    <th onClick={() => handleSort("created_at")} className={sortField === "created_at" ? `sorted ${sortDirection}` : ""}>
+                      Date {sortField === "created_at" && (sortDirection === "asc" ? "↑" : "↓")}
+                    </th>
+                    <th onClick={() => handleSort("first_name")} className={sortField === "first_name" ? `sorted ${sortDirection}` : ""}>
+                      Name {sortField === "first_name" && (sortDirection === "asc" ? "↑" : "↓")}
+                    </th>
+                    <th onClick={() => handleSort("rating")} className={sortField === "rating" ? `sorted ${sortDirection}` : ""}>
+                      Rating {sortField === "rating" && (sortDirection === "asc" ? "↑" : "↓")}
+                    </th>
+                    <th>Feedback</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sortedFeedbacks.map((fb) => (
+                    <tr key={fb.id}>
+                      <td className="date-cell">{formatDate(fb.created_at)}</td>
+                      <td className="name-cell">
+                        <div>{fb.first_name} {fb.last_name}</div>
+                        <div className="email">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                          </svg>
+                          {fb.email}
+                        </div>
+                        {fb.mobile && (
+                          <div className="mobile">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                              <line x1="12" y1="18" x2="12" y2="18"></line>
+                            </svg>
+                            {fb.mobile}
+                          </div>
+                        )}
+                      </td>
+                      <td className="rating-cell">{renderStars(fb.rating)}</td>
+                      <td className="feedback-cell">
+                        <div className="feedback-content">{fb.feedback}</div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            /* Mobile View - Comment Card Layout */
+            <FeedbackListComments 
+              feedbacks={sortedFeedbacks}
+              loading={loading}
+              error={error}
+            />
+          )}
+
+          {/* Pagination controls - outside of conditional rendering so they appear in both views */}
           <div className="pagination-controls">
             <div className="pagination-row">
               <div className="items-per-page">
